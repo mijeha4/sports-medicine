@@ -30,8 +30,15 @@ public class PhysioIndicatorsView extends VerticalLayout {
         this.medicalExaminationService = medicalExaminationService;
         addClassName("physio-indicators-view");
         setSizeFull();
+
+        // Add header and description
+        VerticalLayout headerSection = new VerticalLayout();
+        headerSection.addClassName("header-section");
+        headerSection.add(new com.vaadin.flow.component.html.H1("Управление физиотерапевтическими показателями"));
+        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять физиотерапевтическими показателями спортсменов, включая измеренные значения и нормативные диапазоны."));
+
         configureGrid();
-        add(getToolbar(), grid);
+        add(headerSection, getToolbar(), grid);
         updateList();
     }
 
@@ -39,7 +46,13 @@ public class PhysioIndicatorsView extends VerticalLayout {
         grid.addClassName("physio-indicators-grid");
         grid.setSizeFull();
         grid.setColumns("indicatorId", "examination.id", "indicatorName", "measuredValue", "unit", "normalMin", "normalMax");
-        grid.getColumnByKey("examination.id").setHeader("MedicalExamination Id");
+        grid.getColumnByKey("indicatorId").setHeader("ID");
+        grid.getColumnByKey("examination.id").setHeader("ID Мед. Осмотра");
+        grid.getColumnByKey("indicatorName").setHeader("Название Показателя");
+        grid.getColumnByKey("measuredValue").setHeader("Измеренное Значение");
+        grid.getColumnByKey("unit").setHeader("Единица Измерения");
+        grid.getColumnByKey("normalMin").setHeader("Минимум Нормы");
+        grid.getColumnByKey("normalMax").setHeader("Максимум Нормы");
     }
 
     private VerticalLayout getToolbar() {

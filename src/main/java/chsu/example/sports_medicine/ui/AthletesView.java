@@ -25,8 +25,15 @@ public class AthletesView extends VerticalLayout {
         this.athleteService = athleteService;
         addClassName("athletes-view");
         setSizeFull();
+
+        // Add header and description
+        VerticalLayout headerSection = new VerticalLayout();
+        headerSection.addClassName("header-section");
+        headerSection.add(new com.vaadin.flow.component.html.H1("Управление атлетами"));
+        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять информацией о спортсменах, включая их личные данные, спортивные достижения и медицинские показатели."));
+
         configureGrid();
-        add(getToolbar(), grid);
+        add(headerSection, getToolbar(), grid);
         updateList();
     }
 
@@ -34,6 +41,13 @@ public class AthletesView extends VerticalLayout {
         grid.addClassName("athletes-grid");
         grid.setSizeFull();
         grid.setColumns("id", "first_name", "last_name", "date_of_birth", "sport_type", "phone", "registration_date");
+        grid.getColumnByKey("id").setHeader("ID");
+        grid.getColumnByKey("first_name").setHeader("Имя");
+        grid.getColumnByKey("last_name").setHeader("Фамилия");
+        grid.getColumnByKey("date_of_birth").setHeader("Дата рождения");
+        grid.getColumnByKey("sport_type").setHeader("Тип спорта");
+        grid.getColumnByKey("phone").setHeader("Телефон");
+        grid.getColumnByKey("registration_date").setHeader("Дата регистрации");
     }
 
     private VerticalLayout getToolbar() {

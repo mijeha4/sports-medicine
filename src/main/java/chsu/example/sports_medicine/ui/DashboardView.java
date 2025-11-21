@@ -52,10 +52,15 @@ public class DashboardView extends VerticalLayout {
         setSizeFull();
         setSpacing(true);
         setPadding(true);
+        addClassName("dashboard-view");
 
-        add(createHeader());
-        add(createKpiSection());
-        add(createChartsSection());
+        // Add header and description
+        VerticalLayout headerSection = new VerticalLayout();
+        headerSection.addClassName("header-section");
+        headerSection.add(new com.vaadin.flow.component.html.H1("Медицинский аналитический дэшборд"));
+        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете видеть ключевые показатели здоровья спортсменов, аналитику обследований и рекомендации для улучшения спортивных результатов."));
+
+        add(headerSection, createKpiSection(), createChartsSection());
     }
 
     private H1 createHeader() {

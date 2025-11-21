@@ -28,8 +28,15 @@ public class ExaminationsView extends VerticalLayout {
         this.examinationTypeService = examinationTypeService;
         addClassName("examinations-view");
         setSizeFull();
+
+        // Add header and description
+        VerticalLayout headerSection = new VerticalLayout();
+        headerSection.addClassName("header-section");
+        headerSection.add(new com.vaadin.flow.component.html.H1("Управление типами обследований"));
+        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять различными типами медицинских обследований, включая их описания и параметры."));
+
         configureGrid();
-        add(getToolbar(), grid);
+        add(headerSection, getToolbar(), grid);
         updateList();
     }
 
@@ -37,6 +44,9 @@ public class ExaminationsView extends VerticalLayout {
         grid.addClassName("examinations-grid");
         grid.setSizeFull();
         grid.setColumns("typeId", "typeName", "description");
+        grid.getColumnByKey("typeId").setHeader("ID");
+        grid.getColumnByKey("typeName").setHeader("Название");
+        grid.getColumnByKey("description").setHeader("Описание");
     }
 
     private VerticalLayout getToolbar() {

@@ -29,8 +29,15 @@ public class RecommendationsView extends VerticalLayout {
         this.medicalExaminationService = medicalExaminationService;
         addClassName("recommendations-view");
         setSizeFull();
+
+        // Add header and description
+        VerticalLayout headerSection = new VerticalLayout();
+        headerSection.addClassName("header-section");
+        headerSection.add(new com.vaadin.flow.component.html.H1("Управление рекомендациями"));
+        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять медицинскими рекомендациями для спортсменов, включая их приоритеты и статус выполнения."));
+
         configureGrid();
-        add(getToolbar(), grid);
+        add(headerSection, getToolbar(), grid);
         updateList();
     }
 
@@ -38,8 +45,11 @@ public class RecommendationsView extends VerticalLayout {
         grid.addClassName("recommendations-grid");
         grid.setSizeFull();
         grid.setColumns("recommendationId", "examination.id", "recommendationText", "priority", "status");
-        grid.getColumnByKey("examination.id").setHeader("MedicalExamination Id");
-
+        grid.getColumnByKey("recommendationId").setHeader("ID");
+        grid.getColumnByKey("examination.id").setHeader("ID Мед. Осмотра");
+        grid.getColumnByKey("recommendationText").setHeader("Текст Рекомендации");
+        grid.getColumnByKey("priority").setHeader("Приоритет");
+        grid.getColumnByKey("status").setHeader("Статус");
     }
 
     private VerticalLayout getToolbar() {

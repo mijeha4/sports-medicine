@@ -39,8 +39,15 @@ public class MedicalExaminationsView extends VerticalLayout {
         this.examinationTypeService = examinationTypeService;
         addClassName("medicalexaminations-view");
         setSizeFull();
+
+        // Add header and description
+        VerticalLayout headerSection = new VerticalLayout();
+        headerSection.addClassName("header-section");
+        headerSection.add(new com.vaadin.flow.component.html.H1("Управление медицинскими осмотрами"));
+        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять медицинскими осмотрами спортсменов, включая даты, результаты и заключения врачей."));
+
         configureGrid();
-        add(getToolbar(), grid);
+        add(headerSection, getToolbar(), grid);
         updateList();
     }
 
@@ -48,7 +55,12 @@ public class MedicalExaminationsView extends VerticalLayout {
         grid.addClassName("medicalexaminations-grid");
         grid.setSizeFull();
         grid.setColumns("id", "athlete.id", "doctor.doctorId", "examinationType.typeId", "date", "conclusion");
-        grid.getColumnByKey("athlete.id").setHeader("Athlete Id");
+        grid.getColumnByKey("id").setHeader("ID");
+        grid.getColumnByKey("athlete.id").setHeader("ID Атлета");
+        grid.getColumnByKey("doctor.doctorId").setHeader("ID Доктора");
+        grid.getColumnByKey("examinationType.typeId").setHeader("ID Типа Обследования");
+        grid.getColumnByKey("date").setHeader("Дата");
+        grid.getColumnByKey("conclusion").setHeader("Заключение");
     }
 
     private VerticalLayout getToolbar() {

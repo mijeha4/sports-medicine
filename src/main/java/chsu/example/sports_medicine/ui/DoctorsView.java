@@ -26,8 +26,15 @@ public class DoctorsView extends VerticalLayout {
         this.doctorService = doctorService;
         addClassName("doctors-view");
         setSizeFull();
+
+        // Add header and description
+        VerticalLayout headerSection = new VerticalLayout();
+        headerSection.addClassName("header-section");
+        headerSection.add(new com.vaadin.flow.component.html.H1("Управление врачами"));
+        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять информацией о врачах, включая их специализацию, лицензионные данные и медицинские квалификации."));
+
         configureGrid();
-        add(getToolbar(), grid);
+        add(headerSection, getToolbar(), grid);
         updateList();
     }
 
@@ -35,6 +42,11 @@ public class DoctorsView extends VerticalLayout {
         grid.addClassName("doctors-grid");
         grid.setSizeFull();
         grid.setColumns("doctorId", "firstName", "lastName", "specialization", "licenseNumber");
+        grid.getColumnByKey("doctorId").setHeader("ID");
+        grid.getColumnByKey("firstName").setHeader("Имя");
+        grid.getColumnByKey("lastName").setHeader("Фамилия");
+        grid.getColumnByKey("specialization").setHeader("Специализация");
+        grid.getColumnByKey("licenseNumber").setHeader("Номер лицензии");
     }
 
     private VerticalLayout getToolbar() {
