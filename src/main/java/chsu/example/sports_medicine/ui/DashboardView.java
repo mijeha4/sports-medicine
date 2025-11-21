@@ -3,7 +3,6 @@ package chsu.example.sports_medicine.ui;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
@@ -63,9 +62,6 @@ public class DashboardView extends VerticalLayout {
         add(headerSection, createKpiSection(), createChartsSection());
     }
 
-    private H1 createHeader() {
-        return new H1("Медицинский аналитический дэшборд");
-    }
 
     private HorizontalLayout createKpiSection() {
         HorizontalLayout kpiLayout = new HorizontalLayout();
