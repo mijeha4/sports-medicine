@@ -16,7 +16,7 @@ import chsu.example.sports_medicine.service.MedicalExaminationService;
 import chsu.example.sports_medicine.service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("recommendations")
+@Route(value = "recommendations", layout = MainLayout.class)
 public class RecommendationsView extends VerticalLayout {
 
     private final RecommendationService recommendationService;

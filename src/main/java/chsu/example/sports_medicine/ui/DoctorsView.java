@@ -15,7 +15,7 @@ import chsu.example.sports_medicine.model.Doctor;
 import chsu.example.sports_medicine.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("doctors")
+@Route(value = "doctors", layout = MainLayout.class)
 public class DoctorsView extends VerticalLayout {
 
     private final DoctorService doctorService;

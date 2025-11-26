@@ -19,7 +19,7 @@ import chsu.example.sports_medicine.service.ExaminationTypeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("medicalexaminations")
+@Route(value = "medical-examinations", layout = MainLayout.class)
 public class MedicalExaminationsView extends VerticalLayout {
 
     private final MedicalExaminationService medicalExaminationService;

@@ -3,6 +3,8 @@ package chsu.example.sports_medicine.ui;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -14,7 +16,7 @@ import chsu.example.sports_medicine.model.Athlete;
 import chsu.example.sports_medicine.service.AthleteService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("athletes")
+@Route(value = "athletes", layout = MainLayout.class)
 public class AthletesView extends VerticalLayout {
 
     private final AthleteService athleteService;
@@ -22,6 +24,10 @@ public class AthletesView extends VerticalLayout {
 
     @Autowired
     public AthletesView(AthleteService athleteService) {
+        Div card = new Div();
+        card.addClassName("card");
+        card.addClassName("card--primary");
+
         this.athleteService = athleteService;
         addClassName("athletes-view");
         setSizeFull();
@@ -29,11 +35,16 @@ public class AthletesView extends VerticalLayout {
         // Add header and description
         VerticalLayout headerSection = new VerticalLayout();
         headerSection.addClassName("header-section");
-        headerSection.add(new com.vaadin.flow.component.html.H1("Управление атлетами"));
-        headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять информацией о спортсменах, включая их личные данные, спортивные достижения и медицинские показатели."));
+        H2 title = new H2("Управление атлетами");
+        title.addClassName("card-title");
+        headerSection.add(title);
+        Paragraph content = new Paragraph("Здесь вы можете просматривать, добавлять и управлять информацией о спортсменах, включая их личные данные, спортивные достижения и медицинские показатели.");
+        content.addClassName("card-content");
+        headerSection.add(content);
+        //headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять информацией о спортсменах, включая их личные данные, спортивные достижения и медицинские показатели."));
 
         configureGrid();
-        add(headerSection, getToolbar(), grid);
+        add(headerSection, card, getToolbar(), grid);
         updateList();
     }
 
@@ -66,6 +77,8 @@ public class AthletesView extends VerticalLayout {
             AddAthleteDialog dialog = new AddAthleteDialog(athleteService);
             dialog.open();
         });
+        addAthleteButton.addClassName("transition-all");
+        addAthleteButton.getElement().setAttribute("theme", "primary");
         Button deleteAthleteButton = new Button("Удалить атлета", click -> {
             Athlete selectedAthlete = grid.asSingleSelect().getValue();
             if (selectedAthlete != null) {

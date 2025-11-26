@@ -1,0 +1,11 @@
+{
+  "imports": [
+    "./variables.css",
+    "./animations.css",
+    "./components.css",
+    "./layouts.css",
+    "./utilities.css",
+    "./dark-theme.css"
+  ],
+  "lumoImports": ["typography", "color", "spacing", "badge", "utility"]
+}

@@ -1,0 +1,210 @@
+/* ===========================================
+   MODERN GLASSMORPHISM THEME - ANIMATIONS
+   =========================================== */
+
+.my-app {
+  /* ===== KEYFRAME DEFINITIONS ===== */
+
+  /* Fade In Animation */
+  animation: fadeIn var(--transition-normal) ease-out;
+
+  /* Slide Up Animation */
+  animation: slideUp var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Scale In Animation */
+  animation: scaleIn var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Glow Pulse Animation */
+  animation: glowPulse 2s ease-in-out infinite alternate;
+
+  /* Loading Skeleton Animation */
+  animation: skeletonLoading 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glowPulse {
+  from {
+    box-shadow: var(--shadow-glass-md);
+  }
+  to {
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+@keyframes skeletonLoading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* ===== ANIMATION CLASSES ===== */
+
+.my-app .animate-fade-in {
+  animation: fadeIn var(--transition-normal) ease-out;
+}
+
+.my-app .animate-slide-up {
+  animation: slideUp var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.my-app .animate-scale-in {
+  animation: scaleIn var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.my-app .animate-glow {
+  animation: glowPulse 2s ease-in-out infinite alternate;
+}
+
+/* ===== COMPONENT ANIMATIONS ===== */
+
+/* Dialog Animations */
+.my-app vaadin-dialog-overlay {
+  animation: fadeIn var(--transition-normal) ease-out;
+}
+
+.my-app vaadin-dialog-overlay::part(overlay) {
+  animation: scaleIn var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Card Animations */
+.my-app .card {
+  animation: slideUp var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.my-app .card:nth-child(1) { animation-delay: 0.1s; }
+.my-app .card:nth-child(2) { animation-delay: 0.2s; }
+.my-app .card:nth-child(3) { animation-delay: 0.3s; }
+.my-app .card:nth-child(4) { animation-delay: 0.4s; }
+.my-app .card:nth-child(5) { animation-delay: 0.5s; }
+
+/* Button Hover Animations */
+.my-app vaadin-button:hover {
+  transform: translateY(-1px);
+  transition: all var(--transition-normal);
+}
+
+.my-app vaadin-button:active {
+  transform: translateY(0);
+  transition: all var(--transition-fast);
+}
+
+/* Loading Skeletons */
+.my-app .skeleton {
+  background: linear-gradient(90deg,
+    var(--color-overlay) 25%,
+    rgba(15, 23, 42, 0.05) 50%,
+    var(--color-overlay) 75%);
+  background-size: 200px 100%;
+  animation: skeletonLoading 1.5s ease-in-out infinite;
+}
+
+.my-app .skeleton-text {
+  height: var(--font-size-base);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.my-app .skeleton-text:last-child {
+  width: 60%;
+}
+
+.my-app .skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+}
+
+.my-app .skeleton-button {
+  height: 36px;
+  border-radius: var(--radius-md);
+  width: 100px;
+}
+
+/* ===== TRANSITION UTILITIES ===== */
+
+.my-app .transition-all {
+  transition: all var(--transition-normal);
+}
+
+.my-app .transition-colors {
+  transition: color var(--transition-normal), background-color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.my-app .transition-transform {
+  transition: transform var(--transition-normal);
+}
+
+.my-app .transition-shadow {
+  transition: box-shadow var(--transition-normal);
+}
+
+/* ===== HOVER EFFECTS ===== */
+
+.my-app .hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glass-lg);
+  transition: all var(--transition-normal);
+}
+
+.my-app .hover-glow:hover {
+  box-shadow: var(--shadow-hover);
+  transition: box-shadow var(--transition-normal);
+}
+
+.my-app .hover-scale:hover {
+  transform: scale(1.02);
+  transition: transform var(--transition-normal);
+}
+
+/* ===== RESPONSIVE ANIMATIONS ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .my-app * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .my-app .card {
+    animation: fadeIn var(--transition-normal) ease-out;
+  }
+
+  .my-app .card:nth-child(n) {
+    animation-delay: 0s;
+  }
+}

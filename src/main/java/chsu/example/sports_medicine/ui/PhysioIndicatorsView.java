@@ -17,7 +17,7 @@ import chsu.example.sports_medicine.service.PhysioIndicatorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("physio-indicators")
+@Route(value = "physio-indicators", layout = MainLayout.class)
 public class PhysioIndicatorsView extends VerticalLayout {
 
     private final PhysioIndicatorService physioIndicatorService;

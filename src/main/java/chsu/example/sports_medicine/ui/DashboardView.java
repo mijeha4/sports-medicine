@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Route("dashboard")
+@Route(value = "dashboard", layout = MainLayout.class)
 @CssImport("styles/dashboard-styles.css")
 public class DashboardView extends VerticalLayout {
 

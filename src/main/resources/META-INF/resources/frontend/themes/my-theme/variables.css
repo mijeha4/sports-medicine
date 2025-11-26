@@ -1,0 +1,155 @@
+/* ===========================================
+   MODERN GLASSMORPHISM THEME - CSS VARIABLES
+   =========================================== */
+
+.my-app {
+  /* ===== COLOR PALETTE ===== */
+  /* Primary Navy */
+  --color-primary: #0f172a;
+  --color-primary-dark: #020617;
+  --color-primary-light: #1e293b;
+  --color-primary-lighter: #334155;
+
+  /* Accent Cyan */
+  --color-accent: #06b6d4;
+  --color-accent-dark: #0891b2;
+  --color-accent-light: #22d3ee;
+  --color-accent-lighter: #67e8f9;
+
+  /* Secondary Purple */
+  --color-secondary: #a78bfa;
+  --color-secondary-dark: #8b5cf6;
+  --color-secondary-light: #c4b5fd;
+  --color-secondary-lighter: #ddd6fe;
+
+  /* Neutral Colors */
+  --color-surface: rgba(255, 255, 255, 0.95);
+  --color-surface-hover: rgba(255, 255, 255, 0.98);
+  --color-surface-active: rgba(255, 255, 255, 0.9);
+  --color-overlay: rgba(15, 23, 42, 0.1);
+  --color-overlay-hover: rgba(15, 23, 42, 0.15);
+  --color-overlay-active: rgba(15, 23, 42, 0.2);
+
+  /* Text Colors */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+  --color-text-disabled: #94a3b8;
+  --color-text-inverse: #f8fafc;
+
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-success-light: #34d399;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fbbf24;
+  --color-error: #ef4444;
+  --color-error-light: #f87171;
+  --color-info: #3b82f6;
+  --color-info-light: #60a5fa;
+
+  /* ===== SPACING SYSTEM ===== */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 0.75rem;   /* 12px */
+  --space-lg: 1rem;      /* 16px */
+  --space-xl: 1.5rem;    /* 24px */
+  --space-2xl: 2rem;     /* 32px */
+  --space-3xl: 3rem;     /* 48px */
+  --space-4xl: 4rem;     /* 64px */
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+
+  /* ===== SHADOWS ===== */
+  /* Glassmorphism Shadows */
+  --shadow-glass-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05),
+                     0 1px 3px 0 rgba(15, 23, 42, 0.1),
+                     0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-glass-md: 0 4px 6px -1px rgba(15, 23, 42, 0.05),
+                     0 2px 4px -1px rgba(15, 23, 42, 0.06),
+                     0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-glass-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.05),
+                     0 4px 6px -2px rgba(15, 23, 42, 0.05),
+                     0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-glass-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.05),
+                     0 10px 10px -5px rgba(15, 23, 42, 0.04),
+                     0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  /* Neomorphism Shadows */
+  --shadow-neo-inset: inset 2px 2px 4px rgba(15, 23, 42, 0.1),
+                      inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+  --shadow-neo-outset: 3px 3px 6px rgba(15, 23, 42, 0.1),
+                       -3px -3px 6px rgba(255, 255, 255, 0.8);
+
+  /* Hover/Active States */
+  --shadow-hover: 0 8px 25px -5px rgba(6, 182, 212, 0.2),
+                  0 0 0 1px rgba(6, 182, 212, 0.1);
+  --shadow-active: 0 4px 12px -2px rgba(6, 182, 212, 0.3),
+                   0 0 0 1px rgba(6, 182, 212, 0.2);
+
+  /* ===== BACKDROP BLUR ===== */
+  --blur-sm: blur(4px);
+  --blur-md: blur(8px);
+  --blur-lg: blur(12px);
+  --blur-xl: blur(20px);
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+                 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  /* ===== Z-INDEX SCALE ===== */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+
+  /* ===== BREAKPOINTS ===== */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ===== RESPONSIVE UTILITIES ===== */
+@media (max-width: 640px) {
+  .my-app {
+    --space-lg: 0.875rem;
+    --space-xl: 1.25rem;
+    --space-2xl: 1.5rem;
+  }
+}

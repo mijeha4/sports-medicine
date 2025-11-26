@@ -4,17 +4,16 @@ import { injectGlobalCss } from 'Frontend/generated/jar-resources/theme-util.js'
 
 import { css, unsafeCSS, registerStyles } from '@vaadin/vaadin-themable-mixin';
 import $cssFromFile_0 from 'Frontend/styles/dashboard-styles.css?inline';
-import $cssFromFile_1 from 'Frontend/styles/mainview-styles.css?inline';
 import '@vaadin/polymer-legacy-adapter/style-modules.js';
 import '@vaadin/dialog/theme/lumo/vaadin-dialog.js';
 import 'Frontend/generated/jar-resources/flow-component-renderer.js';
 import '@vaadin/vertical-layout/theme/lumo/vaadin-vertical-layout.js';
+import '@vaadin/app-layout/theme/lumo/vaadin-app-layout.js';
 import '@vaadin/field-highlighter/theme/lumo/vaadin-field-highlighter.js';
 import '@vaadin/common-frontend/ConnectionIndicator.js';
 import '@vaadin/accordion/theme/lumo/vaadin-accordion.js';
 import '@vaadin/details/theme/lumo/vaadin-details.js';
 import '@vaadin/accordion/theme/lumo/vaadin-accordion-panel.js';
-import '@vaadin/app-layout/theme/lumo/vaadin-app-layout.js';
 import '@vaadin/button/theme/lumo/vaadin-button.js';
 import '@vaadin/app-layout/theme/lumo/vaadin-drawer-toggle.js';
 import '@vaadin/avatar/theme/lumo/vaadin-avatar.js';
@@ -96,9 +95,6 @@ import '@vaadin/vaadin-lumo-styles/vaadin-iconset.js';
 
 injectGlobalCss($cssFromFile_0.toString(), 'CSSImport end', document);
 injectGlobalWebcomponentCss($cssFromFile_0.toString());
-
-injectGlobalCss($cssFromFile_1.toString(), 'CSSImport end', document);
-injectGlobalWebcomponentCss($cssFromFile_1.toString());
 const loadOnDemand = (key) => { return Promise.resolve(0); }
 window.Vaadin = window.Vaadin || {};
 window.Vaadin.Flow = window.Vaadin.Flow || {};
