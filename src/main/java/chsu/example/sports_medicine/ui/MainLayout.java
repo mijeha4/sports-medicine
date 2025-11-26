@@ -42,16 +42,16 @@ public class MainLayout extends AppLayout {
         SideNav sideNav = new SideNav();
 
         sideNav.addItem(
-            new SideNavItem("Дэшборд", DashboardView.class, VaadinIcon.DASHBOARD.create()),
+            new SideNavItem("Главная страница", MainView.class, VaadinIcon.DESKTOP.create()),
             new SideNavItem("Атлеты", AthletesView.class, VaadinIcon.USERS.create()),
             new SideNavItem("Доктора", DoctorsView.class, VaadinIcon.DOCTOR.create()),
             new SideNavItem("Тип проверки", ExaminationsView.class, VaadinIcon.CHECK_SQUARE_O.create()),
             new SideNavItem("Мед. осмотр", MedicalExaminationsView.class, VaadinIcon.HEART.create()),
             new SideNavItem("Физио показатели", PhysioIndicatorsView.class, VaadinIcon.CHART.create()),
-            new SideNavItem("Рекомендации", RecommendationsView.class, VaadinIcon.LIGHTBULB.create())
+            new SideNavItem("Рекомендации", RecommendationsView.class, VaadinIcon.LIGHTBULB.create()),
+            new SideNavItem("Дэшборд", DashboardView.class, VaadinIcon.DASHBOARD.create())
         );
 
-        // Просто VerticalLayout с отступами — в Vaadin 24 этого достаточно
         var drawerContent = new com.vaadin.flow.component.orderedlayout.VerticalLayout(sideNav);
         drawerContent.addClassNames(
             LumoUtility.Padding.MEDIUM,
