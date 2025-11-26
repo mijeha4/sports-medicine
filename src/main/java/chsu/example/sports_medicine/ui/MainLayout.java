@@ -2,8 +2,6 @@ package chsu.example.sports_medicine.ui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.avatar.Avatar;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -24,12 +22,7 @@ public class MainLayout extends AppLayout {
         DrawerToggle toggle = new DrawerToggle();
         toggle.getElement().setAttribute("aria-label", "Меню");
 
-        H1 title = new H1("Спортивная медицина");
-        title.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-
-        Avatar avatar = new Avatar("Пользователь");
-
-        Header header = new Header(toggle, title, avatar);
+        Header header = new Header(toggle);
         header.addClassNames(
             "bg-base", "border-b", "border-contrast-10",
             "box-border", "flex", "h-xl", "items-center", "justify-between", "w-full", "px-m"
