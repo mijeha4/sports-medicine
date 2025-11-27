@@ -1,6 +1,5 @@
 package chsu.example.sports_medicine.model;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -29,7 +28,7 @@ public class Athlete {
     private LocalDate date_of_birth;
     private String sport_type;
     private String phone;
-    private Date registration_date;
+    private LocalDate registration_date;
 
     // Default constructor (REQUIRED for Binder!)
     public Athlete() {}
@@ -61,6 +60,14 @@ public class Athlete {
 
     public Long getId() {
         return id;
+    }
+
+    public LocalDate getRegistration_date() {
+        return registration_date;
+    }
+
+    public void setRegistration_date(LocalDate registration_date) {
+        this.registration_date = registration_date;
     }
 
 }

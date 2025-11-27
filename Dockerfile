@@ -1,5 +1,5 @@
 # Use the official Maven image as the base image
-FROM maven:3.8.6-jdk-11 AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -14,7 +14,7 @@ COPY src ./src
 RUN mvn clean package -Pproduction
 
 # Use a smaller base image for the final application
-FROM openjdk:11-jdk-slim
+FROM eclipse-temurin:21-jre
 
 # Set the working directory
 WORKDIR /app

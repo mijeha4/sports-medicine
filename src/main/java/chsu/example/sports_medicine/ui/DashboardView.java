@@ -7,11 +7,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.charts.Chart;
-import com.vaadin.flow.component.charts.model.ChartType;
-import com.vaadin.flow.component.charts.model.ListSeries;
-import com.vaadin.flow.component.charts.model.DataSeries;
-import com.vaadin.flow.component.charts.model.DataSeriesItem;
+import com.vaadin.flow.component.html.Pre;
 
 import chsu.example.sports_medicine.model.Athlete;
 import chsu.example.sports_medicine.model.MedicalExamination;
@@ -92,56 +88,64 @@ public class DashboardView extends VerticalLayout {
         chartsLayout.setWidthFull();
         chartsLayout.setSpacing(true);
 
-        chartsLayout.add(createHeartRateChart());
-        chartsLayout.add(createSportDistributionChart());
-        chartsLayout.add(createHealthStatusChart());
+        chartsLayout.add(createHeartRateStats());
+        chartsLayout.add(createSportDistributionStats());
+        chartsLayout.add(createHealthStatusStats());
 
         return chartsLayout;
     }
 
-    private Chart createHeartRateChart() {
-        Chart chart = new Chart(ChartType.LINE);
-        chart.getConfiguration().setTitle("Динамика ЧСС по спортсменам");
+    private Div createHeartRateStats() {
+        Div statsDiv = new Div();
+        statsDiv.addClassName("stats-card");
 
         List<PhysioIndicator> indicators = physioIndicatorService.findAll();
-        ListSeries series = new ListSeries("ЧСС");
-        indicators.forEach(indicator -> series.addData(indicator.getMeasuredValue()));
+        double avgHeartRate = indicators.stream()
+                .mapToDouble(PhysioIndicator::getMeasuredValue)
+                .average()
+                .orElse(0.0);
 
-        chart.getConfiguration().addSeries(series);
+        statsDiv.add(new H2("Статистика ЧСС"));
+        statsDiv.add(new Span("Средняя ЧСС: " + String.format("%.1f", avgHeartRate)));
+        statsDiv.add(new Span("Всего измерений: " + indicators.size()));
 
-        return chart;
+        return statsDiv;
     }
 
-    private Chart createSportDistributionChart() {
-        Chart chart = new Chart(ChartType.PIE);
-        chart.getConfiguration().setTitle("Распределение по видам спорта");
+    private Div createSportDistributionStats() {
+        Div statsDiv = new Div();
+        statsDiv.addClassName("stats-card");
 
         Map<String, Long> sportDistribution = athleteService.findAll().stream()
                 .collect(Collectors.groupingBy(Athlete::getSport_type, Collectors.counting()));
 
-        DataSeries series = new DataSeries();
+        statsDiv.add(new H2("Распределение по видам спорта"));
+        Pre distributionText = new Pre();
+        StringBuilder sb = new StringBuilder();
         sportDistribution.forEach((sport, count) ->
-            series.add(new DataSeriesItem(sport, count.intValue())));
+            sb.append(sport).append(": ").append(count).append("\n"));
+        distributionText.setText(sb.toString());
+        statsDiv.add(distributionText);
 
-        chart.getConfiguration().addSeries(series);
-
-        return chart;
+        return statsDiv;
     }
 
-    private Chart createHealthStatusChart() {
-        Chart chart = new Chart(ChartType.COLUMN);
-        chart.getConfiguration().setTitle("Состояние здоровья");
+    private Div createHealthStatusStats() {
+        Div statsDiv = new Div();
+        statsDiv.addClassName("stats-card");
 
         Map<String, Long> healthStatus = medicalExaminationService.findAll().stream()
                 .collect(Collectors.groupingBy(MedicalExamination::getConclusion, Collectors.counting()));
 
-        DataSeries series = new DataSeries();
+        statsDiv.add(new H2("Состояние здоровья"));
+        Pre statusText = new Pre();
+        StringBuilder sb = new StringBuilder();
         healthStatus.forEach((status, count) ->
-            series.add(new DataSeriesItem(status, count.intValue())));
+            sb.append(status).append(": ").append(count).append("\n"));
+        statusText.setText(sb.toString());
+        statsDiv.add(statusText);
 
-        chart.getConfiguration().addSeries(series);
-
-        return chart;
+        return statsDiv;
     }
 
    

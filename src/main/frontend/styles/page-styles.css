@@ -16,8 +16,8 @@
 
 /* Button Styles */
 vaadin-button {
-    background-color: #3498db;
-    color: white;
+    background-color: #f7e600;
+    color: hsl(0, 100%, 50%);
     border-radius: 4px;
     padding: 0.5rem 1rem;
     font-weight: 500;
@@ -30,7 +30,7 @@ vaadin-button:hover {
 
 /* Grid Styles */
 vaadin-grid {
-    background-color: white;
+    background-color: rgb(255, 0, 0);
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-top: 1rem;

@@ -9,6 +9,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,7 @@ public class AddAthleteDialog extends Dialog {
         DatePicker ageField = new DatePicker("Date of Birth");
         TextField sportType = new TextField("Sport type");
         TextField phone = new TextField("Phone");
+        DatePicker regField = new DatePicker("Registration Date");
 
         formLayout.add(nameField, surnameField, ageField, sportType, phone);
 
@@ -35,6 +37,7 @@ public class AddAthleteDialog extends Dialog {
         binder.forField(ageField).bind(Athlete::getDateOfBirth, Athlete::setDate_of_birth);
         binder.forField(sportType).bind(Athlete::getSport_type, Athlete::setSport_type);
         binder.forField(phone).bind(Athlete::getPhone, Athlete::setPhone);
+        binder.forField(regField).bind(Athlete::getRegistration_date, Athlete::setRegistration_date);
             
 
         Button saveButton = new Button("Save", event -> {

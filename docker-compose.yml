@@ -1,28 +1,27 @@
 version: '3.8'
-
 services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: sports_medicine_control
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 4a1khFjT
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sports_medicine_control.sql:/docker-entrypoint-initdb.d/init.sql
+
   app:
     build: .
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/sports_medicine
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=4a1khFjT
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sports_medicine_control
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 4a1khFjT
     depends_on:
       - db
-
-  db:
-    image: postgres:18-alpine
-    environment:
-      - POSTGRES_DB=sports_medicine
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=4a1khFjT
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./sports_medicine_control.sql:/docker-entrypoint-initdb.d/sports_medicine_control.sql
-      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
