@@ -70,6 +70,15 @@ public class ExaminationsView extends VerticalLayout {
             AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService);
             dialog.open();
         });
+        Button editExaminationButton = new Button("Изменить тип", click -> {
+            ExaminationType selectedExaminationType = grid.asSingleSelect().getValue();
+            if (selectedExaminationType != null) {
+                AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService, selectedExaminationType);
+                dialog.open();
+            } else {
+                Notification.show("Выберите тип для изменения");
+            }
+        });
         Button deleteExaminationTypeButton = new Button("Удалить тип", click -> {
             ExaminationType selectedExaminationType = grid.asSingleSelect().getValue();
             if (selectedExaminationType != null) {
@@ -78,7 +87,7 @@ public class ExaminationsView extends VerticalLayout {
                 Notification.show("Выберите тип для удаления");
             }
         });
-        return new VerticalLayout(searchField, addExaminationButton, deleteExaminationTypeButton);
+        return new VerticalLayout(searchField, addExaminationButton, editExaminationButton, deleteExaminationTypeButton);
     }
 
     private void updateList() {

@@ -7,7 +7,14 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Pre;
+
+import com.vaadin.flow.component.charts.Chart;
+import com.vaadin.flow.component.charts.model.ChartType;
+import com.vaadin.flow.component.charts.model.Configuration;
+import com.vaadin.flow.component.charts.model.DataSeries;
+import com.vaadin.flow.component.charts.model.DataSeriesItem;
+import com.vaadin.flow.component.charts.model.PlotOptionsPie;
+import com.vaadin.flow.component.charts.model.PlotOptionsColumn;
 
 import chsu.example.sports_medicine.model.Athlete;
 import chsu.example.sports_medicine.model.MedicalExamination;
@@ -95,57 +102,77 @@ public class DashboardView extends VerticalLayout {
         return chartsLayout;
     }
 
-    private Div createHeartRateStats() {
-        Div statsDiv = new Div();
-        statsDiv.addClassName("stats-card");
+    private Chart createHeartRateStats() {
+        Chart chart = new Chart(ChartType.LINE);
+        chart.addClassName("stats-card");
+
+        Configuration conf = chart.getConfiguration();
+        conf.setTitle("Статистика ЧСС");
 
         List<PhysioIndicator> indicators = physioIndicatorService.findAll();
-        double avgHeartRate = indicators.stream()
-                .mapToDouble(PhysioIndicator::getMeasuredValue)
-                .average()
-                .orElse(0.0);
 
-        statsDiv.add(new H2("Статистика ЧСС"));
-        statsDiv.add(new Span("Средняя ЧСС: " + String.format("%.1f", avgHeartRate)));
-        statsDiv.add(new Span("Всего измерений: " + indicators.size()));
+        DataSeries series = new DataSeries("ЧСС");
+        for (int i = 0; i < indicators.size(); i++) {
+            PhysioIndicator indicator = indicators.get(i);
+            DataSeriesItem item = new DataSeriesItem(i + 1, indicator.getMeasuredValue());
+            series.add(item);
+        }
 
-        return statsDiv;
+        conf.addSeries(series);
+
+        // No additional options needed for basic line chart
+
+        return chart;
     }
 
-    private Div createSportDistributionStats() {
-        Div statsDiv = new Div();
-        statsDiv.addClassName("stats-card");
+    private Chart createSportDistributionStats() {
+        Chart chart = new Chart(ChartType.PIE);
+        chart.addClassName("stats-card");
+
+        Configuration conf = chart.getConfiguration();
+        conf.setTitle("Распределение по видам спорта");
 
         Map<String, Long> sportDistribution = athleteService.findAll().stream()
                 .collect(Collectors.groupingBy(Athlete::getSport_type, Collectors.counting()));
 
-        statsDiv.add(new H2("Распределение по видам спорта"));
-        Pre distributionText = new Pre();
-        StringBuilder sb = new StringBuilder();
-        sportDistribution.forEach((sport, count) ->
-            sb.append(sport).append(": ").append(count).append("\n"));
-        distributionText.setText(sb.toString());
-        statsDiv.add(distributionText);
+        DataSeries series = new DataSeries();
+        sportDistribution.forEach((sport, count) -> {
+            DataSeriesItem item = new DataSeriesItem(sport, count);
+            series.add(item);
+        });
 
-        return statsDiv;
+        conf.addSeries(series);
+
+        PlotOptionsPie options = new PlotOptionsPie();
+        options.setAllowPointSelect(true);
+        options.setShowInLegend(true);
+        series.setPlotOptions(options);
+
+        return chart;
     }
 
-    private Div createHealthStatusStats() {
-        Div statsDiv = new Div();
-        statsDiv.addClassName("stats-card");
+    private Chart createHealthStatusStats() {
+        Chart chart = new Chart(ChartType.COLUMN);
+        chart.addClassName("stats-card");
+
+        Configuration conf = chart.getConfiguration();
+        conf.setTitle("Состояние здоровья");
 
         Map<String, Long> healthStatus = medicalExaminationService.findAll().stream()
                 .collect(Collectors.groupingBy(MedicalExamination::getConclusion, Collectors.counting()));
 
-        statsDiv.add(new H2("Состояние здоровья"));
-        Pre statusText = new Pre();
-        StringBuilder sb = new StringBuilder();
-        healthStatus.forEach((status, count) ->
-            sb.append(status).append(": ").append(count).append("\n"));
-        statusText.setText(sb.toString());
-        statsDiv.add(statusText);
+        DataSeries series = new DataSeries("Количество");
+        healthStatus.forEach((status, count) -> {
+            DataSeriesItem item = new DataSeriesItem(status, count);
+            series.add(item);
+        });
 
-        return statsDiv;
+        conf.addSeries(series);
+
+        PlotOptionsColumn options = new PlotOptionsColumn();
+        series.setPlotOptions(options);
+
+        return chart;
     }
 
    

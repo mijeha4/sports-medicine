@@ -65,15 +65,24 @@ public class DoctorsView extends VerticalLayout {
             AddDoctorDialog dialog = new AddDoctorDialog(doctorService);
             dialog.open();
         });
+        Button editDoctorButton = new Button("Изменить доктора", click -> {
+            Doctor selectedDoctor = grid.asSingleSelect().getValue();
+            if (selectedDoctor != null) {
+                AddDoctorDialog dialog = new AddDoctorDialog(doctorService, selectedDoctor);
+                dialog.open();
+            } else {
+                Notification.show("Выберите доктора для изменения");
+            }
+        });
         Button deleteDoctorButton = new Button("Удалить доктора", click -> {
             Doctor selectedDoctor = grid.asSingleSelect().getValue();
             if (selectedDoctor != null) {
                 deleteDoctor(selectedDoctor);
             } else {
-                Notification.show("Выберите атлета для удаления");
+                Notification.show("Выберите доктора для удаления");
             }
         });
-        return new VerticalLayout(searchField, addDoctorButton, deleteDoctorButton);
+        return new VerticalLayout(searchField, addDoctorButton, editDoctorButton, deleteDoctorButton);
     }
 
     private void updateList() {

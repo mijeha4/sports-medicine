@@ -25,13 +25,19 @@ public class AddPhysioIndicatorDialog extends Dialog {
     private final TextField unitField = new TextField("Unit");
     private final NumberField normalMinField = new NumberField("Normal Min");
     private final NumberField normalMaxField = new NumberField("Normal Max");
-    
+
     @Autowired
     public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
                                     MedicalExaminationService medicalExaminationService) {
+        this(physioIndicatorService, medicalExaminationService, null);
+    }
+
+    public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
+                                    MedicalExaminationService medicalExaminationService,
+                                    PhysioIndicator physioIndicator) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
-        setHeaderTitle("Добавить медицинский осмотр");
+        setHeaderTitle(physioIndicator == null ? "Добавить физиотерапевтический показатель" : "Изменить физиотерапевтический показатель");
         setModal(true);
 
         FormLayout formLayout = new FormLayout();
@@ -41,11 +47,22 @@ public class AddPhysioIndicatorDialog extends Dialog {
 
         formLayout.add(examinationField, indicatorNameField, measuredValueField, unitField, normalMinField, normalMaxField);
 
+        binder.forField(examinationField).bind(PhysioIndicator::getExamination, PhysioIndicator::setExamination);
+        binder.forField(indicatorNameField).bind(PhysioIndicator::getIndicatorName, PhysioIndicator::setIndicatorName);
+        binder.forField(measuredValueField).bind(PhysioIndicator::getMeasuredValue, PhysioIndicator::setMeasuredValue);
+        binder.forField(unitField).bind(PhysioIndicator::getUnit, PhysioIndicator::setUnit);
+        binder.forField(normalMinField).bind(PhysioIndicator::getNormalMin, PhysioIndicator::setNormalMin);
+        binder.forField(normalMaxField).bind(PhysioIndicator::getNormalMax, PhysioIndicator::setNormalMax);
+
+        if (physioIndicator != null) {
+            binder.readBean(physioIndicator);
+        }
+
         Button saveButton = new Button("Save", event -> {
             if (binder.validate().isOk()) {
-                PhysioIndicator physioIndicator = new PhysioIndicator();
-                binder.writeBeanIfValid(physioIndicator);
-                physioIndicatorService.save(physioIndicator);
+                PhysioIndicator indicatorToSave = physioIndicator != null ? physioIndicator : new PhysioIndicator();
+                binder.writeBeanIfValid(indicatorToSave);
+                physioIndicatorService.save(indicatorToSave);
                 close();
             }
         });

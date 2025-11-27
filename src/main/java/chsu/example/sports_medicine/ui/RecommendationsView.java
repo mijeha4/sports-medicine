@@ -73,6 +73,15 @@ public class RecommendationsView extends VerticalLayout {
             AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService);
             dialog.open();
         });
+        Button editRecommendationButton = new Button("Изменить рекомендацию", click -> {
+            Recommendation selectedRecommendation = grid.asSingleSelect().getValue();
+            if (selectedRecommendation != null) {
+                AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService, selectedRecommendation);
+                dialog.open();
+            } else {
+                Notification.show("Выберите рекомендацию для изменения");
+            }
+        });
         Button deleteRecommendationButton = new Button("Удалить рекомендацию", click -> {
             Recommendation selectedRecommendation = grid.asSingleSelect().getValue();
             if (selectedRecommendation != null) {
@@ -81,7 +90,7 @@ public class RecommendationsView extends VerticalLayout {
                 Notification.show("Выберите рекомендацию для удаления");
             }
         });
-        return new VerticalLayout(searchField, addRecommendationButton, deleteRecommendationButton);
+        return new VerticalLayout(searchField, addRecommendationButton, editRecommendationButton, deleteRecommendationButton);
     }
 
     private void updateList() {

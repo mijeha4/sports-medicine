@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AddMedicalExaminationDialog extends Dialog {
 
     private final MedicalExaminationService medicalExaminationService;
+    private MedicalExamination medicalExamination;
 
     private final TextField conclusionField = new TextField("Заключение");
     private final DatePicker datePicker = new DatePicker("Дата осмотра");
@@ -35,11 +36,20 @@ public class AddMedicalExaminationDialog extends Dialog {
                                       AthleteService athleteService,
                                       DoctorService doctorService,
                                       ExaminationTypeService examinationTypeService) {
-        this.medicalExaminationService = medicalExaminationService;
+        this(medicalExaminationService, athleteService, doctorService, examinationTypeService, null);
+    }
 
-        setHeaderTitle("Добавить медицинский осмотр");
+    public AddMedicalExaminationDialog(MedicalExaminationService medicalExaminationService,
+                                      AthleteService athleteService,
+                                      DoctorService doctorService,
+                                      ExaminationTypeService examinationTypeService,
+                                      MedicalExamination medicalExamination) {
+        this.medicalExaminationService = medicalExaminationService;
+        this.medicalExamination = medicalExamination;
+
+        setHeaderTitle(medicalExamination == null ? "Добавить медицинский осмотр" : "Изменить медицинский осмотр");
         setModal(true);
-        
+
         FormLayout formLayout = new FormLayout();
         athleteComboBox.setItems(athleteService.findAll());
         athleteComboBox.setItemLabelGenerator(athlete -> athlete.getFirstName() + " " + athlete.getLastName());
@@ -52,6 +62,14 @@ public class AddMedicalExaminationDialog extends Dialog {
 
         formLayout.add(conclusionField, datePicker, athleteComboBox, doctorComboBox, examinationTypeComboBox);
 
+        if (medicalExamination != null) {
+            conclusionField.setValue(medicalExamination.getResults() != null ? medicalExamination.getResults() : "");
+            datePicker.setValue(medicalExamination.getDate());
+            athleteComboBox.setValue(medicalExamination.getAthlete());
+            doctorComboBox.setValue(medicalExamination.getDoctor());
+            examinationTypeComboBox.setValue(medicalExamination.getExaminationType());
+        }
+
         Button saveButton = new Button("Сохранить", event -> saveMedicalExamination());
         Button cancelButton = new Button("Отмена", event -> close());
 
@@ -62,19 +80,19 @@ public class AddMedicalExaminationDialog extends Dialog {
     }
 
     private void saveMedicalExamination() {
-        MedicalExamination medicalExamination = new MedicalExamination();
-        medicalExamination.setAthlete(athleteComboBox.getValue());
-        medicalExamination.setDoctor(doctorComboBox.getValue());
-        medicalExamination.setExaminationType(examinationTypeComboBox.getValue());
-        medicalExamination.setDate(datePicker.getValue());
-        medicalExamination.setResults(conclusionField.getValue());
+        MedicalExamination examinationToSave = medicalExamination != null ? medicalExamination : new MedicalExamination();
+        examinationToSave.setAthlete(athleteComboBox.getValue());
+        examinationToSave.setDoctor(doctorComboBox.getValue());
+        examinationToSave.setExaminationType(examinationTypeComboBox.getValue());
+        examinationToSave.setDate(datePicker.getValue());
+        examinationToSave.setResults(conclusionField.getValue());
 
         try {
-            medicalExaminationService.save(medicalExamination);
-            Notification.show("Медицинский осмотр добавлен");
+            medicalExaminationService.save(examinationToSave);
+            Notification.show(medicalExamination == null ? "Медицинский осмотр добавлен" : "Медицинский осмотр изменен");
             close();
         } catch (Exception e) {
-            Notification.show("Ошибка при добавлении: " + e.getMessage());
+            Notification.show("Ошибка при сохранении: " + e.getMessage());
         }
     }
 }

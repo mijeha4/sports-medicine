@@ -19,6 +19,10 @@ public class AddAthleteDialog extends Dialog {
     private final Binder<Athlete> binder = new Binder<>(Athlete.class);
     @Autowired
     public AddAthleteDialog(AthleteService athleteService) {
+        this(athleteService, null);
+    }
+
+    public AddAthleteDialog(AthleteService athleteService, Athlete athlete) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
 
@@ -30,7 +34,7 @@ public class AddAthleteDialog extends Dialog {
         TextField phone = new TextField("Phone");
         DatePicker regField = new DatePicker("Registration Date");
 
-        formLayout.add(nameField, surnameField, ageField, sportType, phone);
+        formLayout.add(nameField, surnameField, ageField, sportType, phone, regField);
 
         binder.forField(nameField).bind(Athlete::getFirstName, Athlete::setFirstName);
         binder.forField(surnameField).bind(Athlete::getLastName, Athlete::setLastName);
@@ -38,13 +42,16 @@ public class AddAthleteDialog extends Dialog {
         binder.forField(sportType).bind(Athlete::getSport_type, Athlete::setSport_type);
         binder.forField(phone).bind(Athlete::getPhone, Athlete::setPhone);
         binder.forField(regField).bind(Athlete::getRegistration_date, Athlete::setRegistration_date);
-            
+
+        if (athlete != null) {
+            binder.readBean(athlete);
+        }
 
         Button saveButton = new Button("Save", event -> {
             if (binder.validate().isOk()) {
-                Athlete athlete = new Athlete();
-                binder.writeBeanIfValid(athlete);
-                athleteService.saveAthlete(athlete);
+                Athlete athleteToSave = athlete != null ? athlete : new Athlete();
+                binder.writeBeanIfValid(athleteToSave);
+                athleteService.saveAthlete(athleteToSave);
                 close();
             }
         });

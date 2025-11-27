@@ -16,8 +16,6 @@ import '@vaadin/button/theme/lumo/vaadin-button.js';
 import '@vaadin/app-layout/theme/lumo/vaadin-drawer-toggle.js';
 import '@vaadin/avatar/theme/lumo/vaadin-avatar.js';
 import '@vaadin/avatar-group/theme/lumo/vaadin-avatar-group.js';
-import '@vaadin/board/theme/lumo/vaadin-board.js';
-import '@vaadin/board/theme/lumo/vaadin-board-row.js';
 import '@vaadin/charts/theme/lumo/vaadin-chart.js';
 import '@vaadin/checkbox/theme/lumo/vaadin-checkbox.js';
 import '@vaadin/checkbox-group/theme/lumo/vaadin-checkbox-group.js';

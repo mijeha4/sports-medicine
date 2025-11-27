@@ -66,6 +66,15 @@ public class AthletesView extends VerticalLayout {
             AddAthleteDialog dialog = new AddAthleteDialog(athleteService);
             dialog.open();
         });
+        Button editAthleteButton = new Button("Изменить атлета", click -> {
+            Athlete selectedAthlete = grid.asSingleSelect().getValue();
+            if (selectedAthlete != null) {
+                AddAthleteDialog dialog = new AddAthleteDialog(athleteService, selectedAthlete);
+                dialog.open();
+            } else {
+                Notification.show("Выберите атлета для изменения");
+            }
+        });
         Button deleteAthleteButton = new Button("Удалить атлета", click -> {
             Athlete selectedAthlete = grid.asSingleSelect().getValue();
             if (selectedAthlete != null) {
@@ -74,7 +83,7 @@ public class AthletesView extends VerticalLayout {
                 Notification.show("Выберите атлета для удаления");
             }
         });
-        return new VerticalLayout(searchField, addAthleteButton, deleteAthleteButton);
+        return new VerticalLayout(searchField, addAthleteButton, editAthleteButton, deleteAthleteButton);
     }
 
     private void updateList() {

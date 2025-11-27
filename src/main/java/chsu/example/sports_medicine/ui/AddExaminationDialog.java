@@ -13,7 +13,12 @@ import com.vaadin.flow.data.binder.Binder;
 public class AddExaminationDialog extends Dialog {
 
     private final Binder<ExaminationType> binder = new Binder<>(ExaminationType.class);
+
     public AddExaminationDialog(ExaminationTypeService examinationTypeService) {
+        this(examinationTypeService, null);
+    }
+
+    public AddExaminationDialog(ExaminationTypeService examinationTypeService, ExaminationType examinationType) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
 
@@ -21,17 +26,20 @@ public class AddExaminationDialog extends Dialog {
         TextField nameField = new TextField("Type Name");
         TextField descriptionField = new TextField("Description");
 
-
         formLayout.add(nameField, descriptionField);
 
         binder.forField(nameField).bind(ExaminationType::getTypeName, ExaminationType::setTypeName);
         binder.forField(descriptionField).bind(ExaminationType::getDescription, ExaminationType::setDescription);
 
+        if (examinationType != null) {
+            binder.readBean(examinationType);
+        }
+
         Button saveButton = new Button("Save", event -> {
             if (binder.validate().isOk()) {
-                ExaminationType examination = new ExaminationType();
-                binder.writeBeanIfValid(examination);
-                examinationTypeService.save(examination);
+                ExaminationType examinationToSave = examinationType != null ? examinationType : new ExaminationType();
+                binder.writeBeanIfValid(examinationToSave);
+                examinationTypeService.save(examinationToSave);
                 close();
             }
         });

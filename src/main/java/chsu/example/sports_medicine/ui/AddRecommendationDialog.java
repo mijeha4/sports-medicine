@@ -24,24 +24,35 @@ public class AddRecommendationDialog extends Dialog {
     TextField statusField = new TextField("Status");
 
     private final Binder<Recommendation> binder = new Binder<>(Recommendation.class);
-
     @Autowired
     public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService) {
+        this(recommendationService, medicalExaminationService, null);
+    }
+
+    public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService, Recommendation recommendation) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
+        setHeaderTitle(recommendation == null ? "Добавить рекомендацию" : "Изменить рекомендацию");
 
         examinationField.setItems(medicalExaminationService.findAll());
         examinationField.setItemLabelGenerator(medicalExamination -> medicalExamination.getId().toString());
 
         formLayout.add(examinationField, recommendationTextField, priorityField, statusField);
 
+        binder.forField(examinationField).bind(Recommendation::getExamination, Recommendation::setExamination);
+        binder.forField(recommendationTextField).bind(Recommendation::getRecommendationText, Recommendation::setRecommendationText);
+        binder.forField(priorityField).bind(Recommendation::getPriority, Recommendation::setPriority);
+        binder.forField(statusField).bind(Recommendation::getStatus, Recommendation::setStatus);
 
+        if (recommendation != null) {
+            binder.readBean(recommendation);
+        }
 
         Button saveButton = new Button("Save", event -> {
             if (binder.validate().isOk()) {
-                Recommendation recommendation = new Recommendation();
-                binder.writeBeanIfValid(recommendation);
-                recommendationService.save(recommendation);
+                Recommendation recommendationToSave = recommendation != null ? recommendation : new Recommendation();
+                binder.writeBeanIfValid(recommendationToSave);
+                recommendationService.save(recommendationToSave);
                 close();
             }
         });

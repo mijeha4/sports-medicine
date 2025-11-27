@@ -89,6 +89,21 @@ public class MedicalExaminationsView extends VerticalLayout {
             );
             dialog.open();
         });
+        Button editMedicalExaminationButton = new Button("Изменить осмотр", click -> {
+            MedicalExamination selectedMedicalExamination = grid.asSingleSelect().getValue();
+            if (selectedMedicalExamination != null) {
+                AddMedicalExaminationDialog dialog = new AddMedicalExaminationDialog(
+                    medicalExaminationService,
+                    athleteService,
+                    doctorService,
+                    examinationTypeService,
+                    selectedMedicalExamination
+                );
+                dialog.open();
+            } else {
+                Notification.show("Выберите осмотр для изменения");
+            }
+        });
         Button deleteMedicalExaminationButton = new Button("Удалить осмотр", click -> {
             MedicalExamination selectedMedicalExamination = grid.asSingleSelect().getValue();
             if (selectedMedicalExamination != null) {
@@ -97,7 +112,7 @@ public class MedicalExaminationsView extends VerticalLayout {
                 Notification.show("Выберите осмотр для удаления");
             }
         });
-        return new VerticalLayout(searchField, addMedicalExaminationButton, deleteMedicalExaminationButton);
+        return new VerticalLayout(searchField, addMedicalExaminationButton, editMedicalExaminationButton, deleteMedicalExaminationButton);
     }
 
     private void updateList() {

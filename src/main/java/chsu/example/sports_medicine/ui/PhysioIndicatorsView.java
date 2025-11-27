@@ -76,6 +76,15 @@ public class PhysioIndicatorsView extends VerticalLayout {
             AddPhysioIndicatorDialog dialog = new AddPhysioIndicatorDialog(physioIndicatorService, medicalExaminationService);
             dialog.open();
         });
+        Button editPhysioIndicatorButton = new Button("Изменить физиотерапевтический показатель", click -> {
+            PhysioIndicator selectedPhysioIndicator = grid.asSingleSelect().getValue();
+            if (selectedPhysioIndicator != null) {
+                AddPhysioIndicatorDialog dialog = new AddPhysioIndicatorDialog(physioIndicatorService, medicalExaminationService, selectedPhysioIndicator);
+                dialog.open();
+            } else {
+                Notification.show("Выберите физиотерапевтический показатель для изменения");
+            }
+        });
         Button deletePhysioIndicatorButton = new Button("Удалить физиотерапевтический показатель", click -> {
             PhysioIndicator selectedPhysioIndicator = grid.asSingleSelect().getValue();
             if (selectedPhysioIndicator != null) {
@@ -84,7 +93,7 @@ public class PhysioIndicatorsView extends VerticalLayout {
                 Notification.show("Выберите физиотерапевтический показатель для удаления");
             }
         });
-        return new VerticalLayout(searchField, addPhysioIndicatorButton, deletePhysioIndicatorButton);
+        return new VerticalLayout(searchField, addPhysioIndicatorButton, editPhysioIndicatorButton, deletePhysioIndicatorButton);
     }
 
     private void updateList() {

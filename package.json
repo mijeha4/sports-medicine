@@ -4,9 +4,8 @@
   "type": "module",
   "dependencies": {
     "@polymer/polymer": "3.5.2",
-    "@vaadin/board": "24.3.0",
     "@vaadin/bundles": "24.7.12",
-    "@vaadin/charts": "24.3.0",
+    "@vaadin/charts": "24.7.12",
     "@vaadin/common-frontend": "0.0.19",
     "@vaadin/polymer-legacy-adapter": "24.7.12",
     "@vaadin/react-components": "24.7.12",
@@ -46,9 +45,8 @@
   "vaadin": {
     "dependencies": {
       "@polymer/polymer": "3.5.2",
-      "@vaadin/board": "24.3.0",
       "@vaadin/bundles": "24.7.12",
-      "@vaadin/charts": "24.3.0",
+      "@vaadin/charts": "24.7.12",
       "@vaadin/common-frontend": "0.0.19",
       "@vaadin/polymer-legacy-adapter": "24.7.12",
       "@vaadin/react-components": "24.7.12",
@@ -85,7 +83,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "6bbe4622f9469a07cec63d4308376064c38d6f9fd42431e8667aba28e03e2b8b"
+    "hash": "c3c59ce50e59d51f8420b8bd2a3f0a87cc87fa427fdd4b0067826ec2ec3aa0d5"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -161,7 +159,6 @@
     "@vaadin/router": "2.0.0",
     "@vaadin/vertical-layout": "24.7.12",
     "@vaadin/virtual-list": "24.7.12",
-    "@vaadin/charts": "$@vaadin/charts",
-    "@vaadin/board": "$@vaadin/board"
+    "@vaadin/charts": "$@vaadin/charts"
   }
 }

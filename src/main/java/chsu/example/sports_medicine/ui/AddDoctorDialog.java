@@ -13,6 +13,10 @@ public class AddDoctorDialog extends Dialog {
 
     private final Binder<Doctor> binder = new Binder<>(Doctor.class);
     public AddDoctorDialog(DoctorService doctorService) {
+        this(doctorService, null);
+    }
+
+    public AddDoctorDialog(DoctorService doctorService, Doctor doctor) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
 
@@ -29,11 +33,15 @@ public class AddDoctorDialog extends Dialog {
         binder.forField(specializationField).bind(Doctor::getSpecialization, Doctor::setSpecialization);
         binder.forField(licenseNumberField).bind(Doctor::getLicenseNumber, Doctor::setLicenseNumber);
 
+        if (doctor != null) {
+            binder.readBean(doctor);
+        }
+
         Button saveButton = new Button("Save", event -> {
             if (binder.validate().isOk()) {
-                Doctor doctor = new Doctor();
-                binder.writeBeanIfValid(doctor);
-                doctorService.save(doctor);
+                Doctor doctorToSave = doctor != null ? doctor : new Doctor();
+                binder.writeBeanIfValid(doctorToSave);
+                doctorService.save(doctorToSave);
                 close();
             }
         });
