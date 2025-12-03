@@ -12,11 +12,16 @@ import com.vaadin.flow.data.binder.Binder;
 public class AddDoctorDialog extends Dialog {
 
     private final Binder<Doctor> binder = new Binder<>(Doctor.class);
+
     public AddDoctorDialog(DoctorService doctorService) {
-        this(doctorService, null);
+        this(doctorService, null, null);
     }
 
     public AddDoctorDialog(DoctorService doctorService, Doctor doctor) {
+        this(doctorService, doctor, null);
+    }
+
+    public AddDoctorDialog(DoctorService doctorService, Doctor doctor, Runnable onSaveCallback) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
 
@@ -42,6 +47,9 @@ public class AddDoctorDialog extends Dialog {
                 Doctor doctorToSave = doctor != null ? doctor : new Doctor();
                 binder.writeBeanIfValid(doctorToSave);
                 doctorService.save(doctorToSave);
+                if (onSaveCallback != null) {
+                    onSaveCallback.run();
+                }
                 close();
             }
         });

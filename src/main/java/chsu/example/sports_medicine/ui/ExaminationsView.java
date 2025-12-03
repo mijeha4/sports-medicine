@@ -1,12 +1,8 @@
 package chsu.example.sports_medicine.ui;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -67,13 +63,13 @@ public class ExaminationsView extends VerticalLayout {
         });
 
         Button addExaminationButton = new Button("Добавить проверку", click -> {
-            AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService);
+            AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService, null, this::updateList);
             dialog.open();
         });
         Button editExaminationButton = new Button("Изменить тип", click -> {
             ExaminationType selectedExaminationType = grid.asSingleSelect().getValue();
             if (selectedExaminationType != null) {
-                AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService, selectedExaminationType);
+                AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService, selectedExaminationType, this::updateList);
                 dialog.open();
             } else {
                 Notification.show("Выберите тип для изменения");
@@ -94,37 +90,18 @@ public class ExaminationsView extends VerticalLayout {
         grid.setItems(examinationTypeService.findAll());
     }
     private void deleteExaminationType(ExaminationType examinationType) {
-        Dialog confirmDialog = new Dialog();
-        confirmDialog.setModal(true);
-        confirmDialog.setHeaderTitle("Удаление типа");
-        
-        Paragraph message = new Paragraph(
-            "Вы уверены, что хотите удалить тип " + 
-            examinationType.getTypeName() + "?"
-        );
-        
-        Button confirmButton = new Button("Удалить", event -> {
+        String displayName = examinationType.getTypeName();
+        var dependencies = examinationTypeService.getExaminationTypeDependencies(examinationType.getTypeId());
+
+        CascadeDeleteDialog dialog = new CascadeDeleteDialog("типа обследования", displayName, dependencies, () -> {
             try {
-                examinationTypeService.deleteById(examinationType.getTypeId());
+                examinationTypeService.cascadeDeleteExaminationType(examinationType.getTypeId());
                 updateList();
-                Notification.show("Тип удален");
-                confirmDialog.close();
+                Notification.show("Тип обследования и связанные данные удалены");
             } catch (Exception e) {
                 Notification.show("Ошибка при удалении: " + e.getMessage());
             }
         });
-        confirmButton.getStyle().set("color", "var(--lumo-error-color)");
-        
-        Button cancelButton = new Button("Отмена", event -> confirmDialog.close());
-        
-        HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
-        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        
-        VerticalLayout layout = new VerticalLayout(message, buttonsLayout);
-        layout.setSpacing(true);
-        layout.setPadding(false);
-        
-        confirmDialog.add(layout);
-        confirmDialog.open();
+        dialog.open();
     }
 }

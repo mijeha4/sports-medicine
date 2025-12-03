@@ -17,12 +17,17 @@ import org.springframework.stereotype.Component;
 public class AddAthleteDialog extends Dialog {
 
     private final Binder<Athlete> binder = new Binder<>(Athlete.class);
+
     @Autowired
     public AddAthleteDialog(AthleteService athleteService) {
-        this(athleteService, null);
+        this(athleteService, null, null);
     }
 
     public AddAthleteDialog(AthleteService athleteService, Athlete athlete) {
+        this(athleteService, athlete, null);
+    }
+
+    public AddAthleteDialog(AthleteService athleteService, Athlete athlete, Runnable onSaveCallback) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
 
@@ -52,6 +57,9 @@ public class AddAthleteDialog extends Dialog {
                 Athlete athleteToSave = athlete != null ? athlete : new Athlete();
                 binder.writeBeanIfValid(athleteToSave);
                 athleteService.saveAthlete(athleteToSave);
+                if (onSaveCallback != null) {
+                    onSaveCallback.run();
+                }
                 close();
             }
         });

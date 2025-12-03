@@ -1,12 +1,8 @@
 package chsu.example.sports_medicine.ui;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -85,7 +81,9 @@ public class MedicalExaminationsView extends VerticalLayout {
                 medicalExaminationService,
                 athleteService,
                 doctorService,
-                examinationTypeService
+                examinationTypeService,
+                null,
+                this::updateList
             );
             dialog.open();
         });
@@ -97,7 +95,8 @@ public class MedicalExaminationsView extends VerticalLayout {
                     athleteService,
                     doctorService,
                     examinationTypeService,
-                    selectedMedicalExamination
+                    selectedMedicalExamination,
+                    this::updateList
                 );
                 dialog.open();
             } else {
@@ -120,37 +119,18 @@ public class MedicalExaminationsView extends VerticalLayout {
     }
 
     private void deleteMedicalExamination(MedicalExamination medicalExamination) {
-        Dialog confirmDialog = new Dialog();
-        confirmDialog.setModal(true);
-        confirmDialog.setHeaderTitle("Удаление осмотра");
+        String displayName = "осмотр с id " + medicalExamination.getId();
+        var dependencies = medicalExaminationService.getMedicalExaminationDependencies(medicalExamination.getId());
 
-        Paragraph message = new Paragraph(
-            "Вы уверены, что хотите удалить осмотр с id " +
-            medicalExamination.getId() + "?"
-        );
-
-        Button confirmButton = new Button("Удалить", event -> {
+        CascadeDeleteDialog dialog = new CascadeDeleteDialog("осмотра", displayName, dependencies, () -> {
             try {
-                medicalExaminationService.deleteById(medicalExamination.getId());
+                medicalExaminationService.cascadeDeleteMedicalExamination(medicalExamination.getId());
                 updateList();
-                Notification.show("Осмотр удален");
-                confirmDialog.close();
+                Notification.show("Осмотр и связанные данные удалены");
             } catch (Exception e) {
                 Notification.show("Ошибка при удалении: " + e.getMessage());
             }
         });
-        confirmButton.getStyle().set("color", "var(--lumo-error-color)");
-
-        Button cancelButton = new Button("Отмена", event -> confirmDialog.close());
-
-        HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
-        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
-        VerticalLayout layout = new VerticalLayout(message, buttonsLayout);
-        layout.setSpacing(true);
-        layout.setPadding(false);
-
-        confirmDialog.add(layout);
-        confirmDialog.open();
+        dialog.open();
     }
 }

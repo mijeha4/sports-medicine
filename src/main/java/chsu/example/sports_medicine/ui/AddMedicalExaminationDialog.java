@@ -24,6 +24,7 @@ public class AddMedicalExaminationDialog extends Dialog {
 
     private final MedicalExaminationService medicalExaminationService;
     private MedicalExamination medicalExamination;
+    private final Runnable onSaveCallback;
 
     private final TextField conclusionField = new TextField("Заключение");
     private final DatePicker datePicker = new DatePicker("Дата осмотра");
@@ -36,7 +37,7 @@ public class AddMedicalExaminationDialog extends Dialog {
                                       AthleteService athleteService,
                                       DoctorService doctorService,
                                       ExaminationTypeService examinationTypeService) {
-        this(medicalExaminationService, athleteService, doctorService, examinationTypeService, null);
+        this(medicalExaminationService, athleteService, doctorService, examinationTypeService, null, null);
     }
 
     public AddMedicalExaminationDialog(MedicalExaminationService medicalExaminationService,
@@ -44,8 +45,18 @@ public class AddMedicalExaminationDialog extends Dialog {
                                       DoctorService doctorService,
                                       ExaminationTypeService examinationTypeService,
                                       MedicalExamination medicalExamination) {
+        this(medicalExaminationService, athleteService, doctorService, examinationTypeService, medicalExamination, null);
+    }
+
+    public AddMedicalExaminationDialog(MedicalExaminationService medicalExaminationService,
+                                      AthleteService athleteService,
+                                      DoctorService doctorService,
+                                      ExaminationTypeService examinationTypeService,
+                                      MedicalExamination medicalExamination,
+                                      Runnable onSaveCallback) {
         this.medicalExaminationService = medicalExaminationService;
         this.medicalExamination = medicalExamination;
+        this.onSaveCallback = onSaveCallback;
 
         setHeaderTitle(medicalExamination == null ? "Добавить медицинский осмотр" : "Изменить медицинский осмотр");
         setModal(true);
@@ -90,6 +101,9 @@ public class AddMedicalExaminationDialog extends Dialog {
         try {
             medicalExaminationService.save(examinationToSave);
             Notification.show(medicalExamination == null ? "Медицинский осмотр добавлен" : "Медицинский осмотр изменен");
+            if (onSaveCallback != null) {
+                onSaveCallback.run();
+            }
             close();
         } catch (Exception e) {
             Notification.show("Ошибка при сохранении: " + e.getMessage());

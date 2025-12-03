@@ -12,4 +12,8 @@ import java.util.List;
 public interface PhysioIndicatorRepository extends JpaRepository<PhysioIndicator, Long> {
     @Query("SELECT pi FROM PhysioIndicator pi WHERE pi.indicatorId = :indicatorId")
     List<PhysioIndicator> findByIndicatorId(@Param("indicatorId") Long indicatorId);
+
+    long countByExaminationId(Long examinationId);
+
+    void deleteByExaminationId(Long examinationId);
 }

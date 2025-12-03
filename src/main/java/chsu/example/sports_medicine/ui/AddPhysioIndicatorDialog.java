@@ -29,12 +29,19 @@ public class AddPhysioIndicatorDialog extends Dialog {
     @Autowired
     public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
                                     MedicalExaminationService medicalExaminationService) {
-        this(physioIndicatorService, medicalExaminationService, null);
+        this(physioIndicatorService, medicalExaminationService, null, null);
     }
 
     public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
                                     MedicalExaminationService medicalExaminationService,
                                     PhysioIndicator physioIndicator) {
+        this(physioIndicatorService, medicalExaminationService, physioIndicator, null);
+    }
+
+    public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
+                                    MedicalExaminationService medicalExaminationService,
+                                    PhysioIndicator physioIndicator,
+                                    Runnable onSaveCallback) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
         setHeaderTitle(physioIndicator == null ? "Добавить физиотерапевтический показатель" : "Изменить физиотерапевтический показатель");
@@ -63,6 +70,9 @@ public class AddPhysioIndicatorDialog extends Dialog {
                 PhysioIndicator indicatorToSave = physioIndicator != null ? physioIndicator : new PhysioIndicator();
                 binder.writeBeanIfValid(indicatorToSave);
                 physioIndicatorService.save(indicatorToSave);
+                if (onSaveCallback != null) {
+                    onSaveCallback.run();
+                }
                 close();
             }
         });

@@ -70,13 +70,13 @@ public class RecommendationsView extends VerticalLayout {
         });
 
         Button addRecommendationButton = new Button("Добавить рекомендации", click -> {
-            AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService);
+            AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService, null, this::updateList);
             dialog.open();
         });
         Button editRecommendationButton = new Button("Изменить рекомендацию", click -> {
             Recommendation selectedRecommendation = grid.asSingleSelect().getValue();
             if (selectedRecommendation != null) {
-                AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService, selectedRecommendation);
+                AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService, selectedRecommendation, this::updateList);
                 dialog.open();
             } else {
                 Notification.show("Выберите рекомендацию для изменения");

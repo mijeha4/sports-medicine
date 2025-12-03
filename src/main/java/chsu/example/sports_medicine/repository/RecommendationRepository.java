@@ -12,4 +12,8 @@ import java.util.List;
 public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
     @Query("SELECT r FROM Recommendation r WHERE r.recommendationId = :recommendationId")
     List<Recommendation> findByRecommendationId(@Param("recommendationId") Long recommendationId);
+
+    long countByExaminationId(Long examinationId);
+
+    void deleteByExaminationId(Long examinationId);
 }

@@ -15,10 +15,14 @@ public class AddExaminationDialog extends Dialog {
     private final Binder<ExaminationType> binder = new Binder<>(ExaminationType.class);
 
     public AddExaminationDialog(ExaminationTypeService examinationTypeService) {
-        this(examinationTypeService, null);
+        this(examinationTypeService, null, null);
     }
 
     public AddExaminationDialog(ExaminationTypeService examinationTypeService, ExaminationType examinationType) {
+        this(examinationTypeService, examinationType, null);
+    }
+
+    public AddExaminationDialog(ExaminationTypeService examinationTypeService, ExaminationType examinationType, Runnable onSaveCallback) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
 
@@ -40,6 +44,9 @@ public class AddExaminationDialog extends Dialog {
                 ExaminationType examinationToSave = examinationType != null ? examinationType : new ExaminationType();
                 binder.writeBeanIfValid(examinationToSave);
                 examinationTypeService.save(examinationToSave);
+                if (onSaveCallback != null) {
+                    onSaveCallback.run();
+                }
                 close();
             }
         });

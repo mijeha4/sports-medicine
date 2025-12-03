@@ -1,12 +1,8 @@
 package chsu.example.sports_medicine.ui;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -63,13 +59,13 @@ public class AthletesView extends VerticalLayout {
         });
 
         Button addAthleteButton = new Button("Добавить атлета", click -> {
-            AddAthleteDialog dialog = new AddAthleteDialog(athleteService);
+            AddAthleteDialog dialog = new AddAthleteDialog(athleteService, null, this::updateList);
             dialog.open();
         });
         Button editAthleteButton = new Button("Изменить атлета", click -> {
             Athlete selectedAthlete = grid.asSingleSelect().getValue();
             if (selectedAthlete != null) {
-                AddAthleteDialog dialog = new AddAthleteDialog(athleteService, selectedAthlete);
+                AddAthleteDialog dialog = new AddAthleteDialog(athleteService, selectedAthlete, this::updateList);
                 dialog.open();
             } else {
                 Notification.show("Выберите атлета для изменения");
@@ -91,37 +87,18 @@ public class AthletesView extends VerticalLayout {
     }
 
     private void deleteAthlete(Athlete athlete) {
-        Dialog confirmDialog = new Dialog();
-        confirmDialog.setModal(true);
-        confirmDialog.setHeaderTitle("Удаление атлета");
+        String displayName = athlete.getFirstName() + " " + athlete.getLastName();
+        var dependencies = athleteService.getAthleteDependencies(athlete.getId());
 
-        Paragraph message = new Paragraph(
-            "Вы уверены, что хотите удалить атлета " +
-            athlete.getFirstName() + " " + athlete.getLastName() + "?"
-        );
-
-        Button confirmButton = new Button("Удалить", event -> {
+        CascadeDeleteDialog dialog = new CascadeDeleteDialog("атлета", displayName, dependencies, () -> {
             try {
-                athleteService.deleteAthlete(athlete.getId());
+                athleteService.cascadeDeleteAthlete(athlete.getId());
                 updateList();
-                Notification.show("Атлет удален");
-                confirmDialog.close();
+                Notification.show("Атлет и связанные данные удалены");
             } catch (Exception e) {
                 Notification.show("Ошибка при удалении: " + e.getMessage());
             }
         });
-        confirmButton.getStyle().set("color", "var(--lumo-error-color)");
-
-        Button cancelButton = new Button("Отмена", event -> confirmDialog.close());
-
-        HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
-        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
-        VerticalLayout layout = new VerticalLayout(message, buttonsLayout);
-        layout.setSpacing(true);
-        layout.setPadding(false);
-
-        confirmDialog.add(layout);
-        confirmDialog.open();
+        dialog.open();
     }
 }

@@ -24,12 +24,17 @@ public class AddRecommendationDialog extends Dialog {
     TextField statusField = new TextField("Status");
 
     private final Binder<Recommendation> binder = new Binder<>(Recommendation.class);
+
     @Autowired
     public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService) {
-        this(recommendationService, medicalExaminationService, null);
+        this(recommendationService, medicalExaminationService, null, null);
     }
 
     public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService, Recommendation recommendation) {
+        this(recommendationService, medicalExaminationService, recommendation, null);
+    }
+
+    public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService, Recommendation recommendation, Runnable onSaveCallback) {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
         setHeaderTitle(recommendation == null ? "Добавить рекомендацию" : "Изменить рекомендацию");
@@ -53,6 +58,9 @@ public class AddRecommendationDialog extends Dialog {
                 Recommendation recommendationToSave = recommendation != null ? recommendation : new Recommendation();
                 binder.writeBeanIfValid(recommendationToSave);
                 recommendationService.save(recommendationToSave);
+                if (onSaveCallback != null) {
+                    onSaveCallback.run();
+                }
                 close();
             }
         });

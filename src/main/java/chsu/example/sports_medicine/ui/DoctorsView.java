@@ -1,12 +1,8 @@
 package chsu.example.sports_medicine.ui;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -62,13 +58,13 @@ public class DoctorsView extends VerticalLayout {
         });
 
         Button addDoctorButton = new Button("Добавить доктора", click -> {
-            AddDoctorDialog dialog = new AddDoctorDialog(doctorService);
+            AddDoctorDialog dialog = new AddDoctorDialog(doctorService, null, this::updateList);
             dialog.open();
         });
         Button editDoctorButton = new Button("Изменить доктора", click -> {
             Doctor selectedDoctor = grid.asSingleSelect().getValue();
             if (selectedDoctor != null) {
-                AddDoctorDialog dialog = new AddDoctorDialog(doctorService, selectedDoctor);
+                AddDoctorDialog dialog = new AddDoctorDialog(doctorService, selectedDoctor, this::updateList);
                 dialog.open();
             } else {
                 Notification.show("Выберите доктора для изменения");
@@ -90,37 +86,18 @@ public class DoctorsView extends VerticalLayout {
     }
 
     private void deleteDoctor(Doctor doctor) {
-        Dialog confirmDialog = new Dialog();
-        confirmDialog.setModal(true);
-        confirmDialog.setHeaderTitle("Удаление доктора");
+        String displayName = doctor.getFirstName() + " " + doctor.getLastName();
+        var dependencies = doctorService.getDoctorDependencies(doctor.getDoctorId());
 
-        Paragraph message = new Paragraph(
-            "Вы уверены, что хотите удалить доктора " +
-            doctor.getFirstName() + " " + doctor.getLastName() + "?"
-        );
-
-        Button confirmButton = new Button("Удалить", event -> {
+        CascadeDeleteDialog dialog = new CascadeDeleteDialog("доктора", displayName, dependencies, () -> {
             try {
-                doctorService.deleteById(doctor.getDoctorId());
+                doctorService.cascadeDeleteDoctor(doctor.getDoctorId());
                 updateList();
-                Notification.show("Атлет удален");
-                confirmDialog.close();
+                Notification.show("Доктор и связанные данные удалены");
             } catch (Exception e) {
                 Notification.show("Ошибка при удалении: " + e.getMessage());
             }
         });
-        confirmButton.getStyle().set("color", "var(--lumo-error-color)");
-
-        Button cancelButton = new Button("Отмена", event -> confirmDialog.close());
-
-        HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
-        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
-        VerticalLayout layout = new VerticalLayout(message, buttonsLayout);
-        layout.setSpacing(true);
-        layout.setPadding(false);
-
-        confirmDialog.add(layout);
-        confirmDialog.open();
+        dialog.open();
     }
 }
