@@ -9,16 +9,16 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dependency.CssImport;
 
 import com.vaadin.flow.component.charts.Chart;
+import com.vaadin.flow.component.charts.model.AxisType;
 import com.vaadin.flow.component.charts.model.ChartType;
 import com.vaadin.flow.component.charts.model.Configuration;
 import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.component.charts.model.PlotOptionsPie;
+import com.vaadin.flow.component.charts.model.XAxis;
 import com.vaadin.flow.component.charts.model.PlotOptionsColumn;
 
 import chsu.example.sports_medicine.model.Athlete;
-import chsu.example.sports_medicine.model.MedicalExamination;
-import chsu.example.sports_medicine.model.PhysioIndicator;
 import chsu.example.sports_medicine.service.AthleteService;
 import chsu.example.sports_medicine.service.DoctorService;
 import chsu.example.sports_medicine.service.MedicalExaminationService;
@@ -27,6 +27,7 @@ import chsu.example.sports_medicine.service.PhysioIndicatorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,9 +37,7 @@ import java.util.stream.Collectors;
 public class DashboardView extends VerticalLayout {
 
     private final AthleteService athleteService;
-    private final MedicalExaminationService medicalExaminationService;
     private final RecommendationService recommendationService;
-    private final PhysioIndicatorService physioIndicatorService;
 
     @Autowired
     public DashboardView(AthleteService athleteService,
@@ -47,9 +46,7 @@ public class DashboardView extends VerticalLayout {
                         RecommendationService recommendationService,
                         PhysioIndicatorService physioIndicatorService) {
         this.athleteService = athleteService;
-        this.medicalExaminationService = medicalExaminationService;
         this.recommendationService = recommendationService;
-        this.physioIndicatorService = physioIndicatorService;
 
         setSizeFull();
         setSpacing(true);
@@ -95,32 +92,62 @@ public class DashboardView extends VerticalLayout {
         chartsLayout.setWidthFull();
         chartsLayout.setSpacing(true);
 
-        chartsLayout.add(createHeartRateStats());
+        chartsLayout.add(createAgeDistributionStats());
         chartsLayout.add(createSportDistributionStats());
-        chartsLayout.add(createHealthStatusStats());
 
         return chartsLayout;
     }
 
-    private Chart createHeartRateStats() {
-        Chart chart = new Chart(ChartType.LINE);
-        chart.addClassName("stats-card");
+        private Chart createAgeDistributionStats() {
+            Chart chart = new Chart(ChartType.COLUMN);
+            chart.addClassName("stats-card");
 
-        Configuration conf = chart.getConfiguration();
-        conf.setTitle("Статистика ЧСС");
+            Configuration conf = chart.getConfiguration();
+            conf.setTitle("Возрастное распределение спортсменов");
 
-        List<PhysioIndicator> indicators = physioIndicatorService.findAll();
+            XAxis xAxis = new XAxis();
+        xAxis.setType(AxisType.CATEGORY); // Говорим графику брать подписи из имен DataSeriesItem
+        xAxis.setTitle("Возрастные группы"); // Необязательно: название самой оси
+        conf.addxAxis(xAxis);
 
-        DataSeries series = new DataSeries("ЧСС");
-        for (int i = 0; i < indicators.size(); i++) {
-            PhysioIndicator indicator = indicators.get(i);
-            DataSeriesItem item = new DataSeriesItem(i + 1, indicator.getMeasuredValue());
+        List<Athlete> athletes = athleteService.findAll();
+
+        Map<String, Long> ageGroups = athletes.stream()
+                .filter(athlete -> athlete.getDateOfBirth() != null)
+                .map(athlete -> {
+                    int age = LocalDate.now().getYear() - athlete.getDateOfBirth().getYear();
+                    if (age < 20) return "10-19";
+                    else if (age < 30) return "20-29";
+                    else if (age < 40) return "30-39";
+                    else return "40+";
+                })
+                .collect(Collectors.groupingBy(age -> age, Collectors.counting()));
+
+        DataSeries series = new DataSeries("Количество");
+        ageGroups.forEach((ageGroup, count) -> {
+            DataSeriesItem item = new DataSeriesItem(ageGroup, count);
             series.add(item);
+        });
+
+        List<String> orderedKeys = List.of("10-19", "20-29", "30-39", "40+");
+        for (String key : orderedKeys) {
+        // Если в какой-то группе никого нет, ставим 0, иначе берем значение из map
+        Long count = ageGroups.getOrDefault(key, 0L);
+        
+        // Первый параметр (key) станет подписью столбца, второй (count) - высотой
+        DataSeriesItem item = new DataSeriesItem(key, count);
+        
+        // Можно раскрасить каждый столбец в свой цвет (по желанию)
+        // item.setColor(DataSeriesItem.Color.parseColor("#HEXCODE")); 
+        
+        series.add(item);
         }
 
         conf.addSeries(series);
 
-        // No additional options needed for basic line chart
+        PlotOptionsColumn options = new PlotOptionsColumn();
+        options.getDataLabels().setEnabled(true);
+        series.setPlotOptions(options);
 
         return chart;
     }
@@ -150,30 +177,4 @@ public class DashboardView extends VerticalLayout {
 
         return chart;
     }
-
-    private Chart createHealthStatusStats() {
-        Chart chart = new Chart(ChartType.COLUMN);
-        chart.addClassName("stats-card");
-
-        Configuration conf = chart.getConfiguration();
-        conf.setTitle("Состояние здоровья");
-
-        Map<String, Long> healthStatus = medicalExaminationService.findAll().stream()
-                .collect(Collectors.groupingBy(MedicalExamination::getConclusion, Collectors.counting()));
-
-        DataSeries series = new DataSeries("Количество");
-        healthStatus.forEach((status, count) -> {
-            DataSeriesItem item = new DataSeriesItem(status, count);
-            series.add(item);
-        });
-
-        conf.addSeries(series);
-
-        PlotOptionsColumn options = new PlotOptionsColumn();
-        series.setPlotOptions(options);
-
-        return chart;
-    }
-
-   
 }
