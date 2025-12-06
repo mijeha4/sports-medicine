@@ -26,10 +26,10 @@ public class AddDoctorDialog extends Dialog {
         setCloseOnOutsideClick(false);
 
         FormLayout formLayout = new FormLayout();
-        TextField firstNameField = new TextField("First Name");
-        TextField lastNameField = new TextField("Last Name");
-        TextField specializationField = new TextField("Specialization");
-        TextField licenseNumberField = new TextField("License Number");
+        TextField firstNameField = new TextField("Имя");
+        TextField lastNameField = new TextField("Фамилия");
+        TextField specializationField = new TextField("Специализация");
+        TextField licenseNumberField = new TextField("Номер лицензии");
 
         formLayout.add(firstNameField, lastNameField, specializationField, licenseNumberField);
 
@@ -42,7 +42,7 @@ public class AddDoctorDialog extends Dialog {
             binder.readBean(doctor);
         }
 
-        Button saveButton = new Button("Save", event -> {
+        Button saveButton = new Button("Сохранить", event -> {
             if (binder.validate().isOk()) {
                 Doctor doctorToSave = doctor != null ? doctor : new Doctor();
                 binder.writeBeanIfValid(doctorToSave);
@@ -54,7 +54,7 @@ public class AddDoctorDialog extends Dialog {
             }
         });
 
-        Button cancelButton = new Button("Cancel", event -> close());
+        Button cancelButton = new Button("Отмена", event -> close());
 
         VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
         buttonLayout.setSpacing(true);

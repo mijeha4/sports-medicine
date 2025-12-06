@@ -32,12 +32,12 @@ public class AddAthleteDialog extends Dialog {
         setCloseOnOutsideClick(false);
 
         FormLayout formLayout = new FormLayout();
-        TextField nameField = new TextField("Name");
-        TextField surnameField = new TextField("Surname");
-        DatePicker ageField = new DatePicker("Date of Birth");
-        TextField sportType = new TextField("Sport type");
-        TextField phone = new TextField("Phone");
-        DatePicker regField = new DatePicker("Registration Date");
+        TextField nameField = new TextField("Имя");
+        TextField surnameField = new TextField("Фамилия");
+        DatePicker ageField = new DatePicker("Дата рождения");
+        TextField sportType = new TextField("Тип спорта");
+        TextField phone = new TextField("Телефон");
+        DatePicker regField = new DatePicker("Дата регистрации");
 
         formLayout.add(nameField, surnameField, ageField, sportType, phone, regField);
 
@@ -52,7 +52,7 @@ public class AddAthleteDialog extends Dialog {
             binder.readBean(athlete);
         }
 
-        Button saveButton = new Button("Save", event -> {
+        Button saveButton = new Button("Сохранить", event -> {
             if (binder.validate().isOk()) {
                 Athlete athleteToSave = athlete != null ? athlete : new Athlete();
                 binder.writeBeanIfValid(athleteToSave);
@@ -64,7 +64,7 @@ public class AddAthleteDialog extends Dialog {
             }
         });
 
-        Button cancelButton = new Button("Cancel", event -> close());
+        Button cancelButton = new Button("Отмена", event -> close());
 
         VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
         buttonLayout.setSpacing(true);

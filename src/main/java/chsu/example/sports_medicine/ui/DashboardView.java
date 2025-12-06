@@ -6,7 +6,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.component.dependency.CssImport;
 
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.AxisType;
@@ -33,7 +32,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Route(value = "dashboard", layout = MainLayout.class)
-@CssImport("styles/dashboard-styles.css")
 public class DashboardView extends VerticalLayout {
 
     private final AthleteService athleteService;

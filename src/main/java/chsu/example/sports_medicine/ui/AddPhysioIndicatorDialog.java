@@ -19,12 +19,12 @@ public class AddPhysioIndicatorDialog extends Dialog {
 
     private final Binder<PhysioIndicator> binder = new Binder<>(PhysioIndicator.class);
 
-    private final ComboBox<MedicalExamination> examinationField = new ComboBox<>("Examination");
-    private final TextField indicatorNameField = new TextField("Indicator Name");
-    private final NumberField measuredValueField = new NumberField("Measured Value");
-    private final TextField unitField = new TextField("Unit");
-    private final NumberField normalMinField = new NumberField("Normal Min");
-    private final NumberField normalMaxField = new NumberField("Normal Max");
+    private final ComboBox<MedicalExamination> examinationField = new ComboBox<>("Осмотр");
+    private final TextField indicatorNameField = new TextField("Имя физиотер. показателя");
+    private final NumberField measuredValueField = new NumberField("измеренное значение");
+    private final TextField unitField = new TextField("Ед. изм.");
+    private final NumberField normalMinField = new NumberField("Нормальный минимум");
+    private final NumberField normalMaxField = new NumberField("Нормальный максимум");
 
     @Autowired
     public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
@@ -65,7 +65,7 @@ public class AddPhysioIndicatorDialog extends Dialog {
             binder.readBean(physioIndicator);
         }
 
-        Button saveButton = new Button("Save", event -> {
+        Button saveButton = new Button("Сохранить", event -> {
             if (binder.validate().isOk()) {
                 PhysioIndicator indicatorToSave = physioIndicator != null ? physioIndicator : new PhysioIndicator();
                 binder.writeBeanIfValid(indicatorToSave);
@@ -77,7 +77,7 @@ public class AddPhysioIndicatorDialog extends Dialog {
             }
         });
 
-        Button cancelButton = new Button("Cancel", event -> close());
+        Button cancelButton = new Button("Отмена", event -> close());
 
         VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
         buttonLayout.setSpacing(true);

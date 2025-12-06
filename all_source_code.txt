@@ -1,0 +1,1822 @@
+// --- File: SportsMedicineAppApplication.java ---
+package chsu.example.sports_medicine;
+@SpringBootApplication
+public class SportsMedicineAppApplication {
+public static void main(String[] args) {
+SpringApplication.run(SportsMedicineAppApplication.class, args);
+}
+}
+
+// --- File: model\Athlete.java ---
+package chsu.example.sports_medicine.model;
+@Data
+@Entity
+@Table(name = "athletes")
+public class Athlete {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "athlete_id")
+private Long id;
+@Column(name = "first_name")
+private String first_name;
+@Column(name = "last_name")
+private String last_name;
+private LocalDate date_of_birth;
+private String sport_type;
+private String phone;
+private LocalDate registration_date;
+// Default constructor (REQUIRED for Binder!)
+public Athlete() {}
+// Getters and setters
+public String getFirstName() {
+return first_name;
+}
+public void setFirstName(String name) {
+this.first_name = name;
+}
+public String getLastName() {
+return last_name;
+}
+public void setLastName(String last_name) {
+this.last_name = last_name;
+}
+public LocalDate getDateOfBirth() {
+return date_of_birth;
+}
+public void setDateOfBirth(LocalDate date_of_birth){
+this.date_of_birth = date_of_birth;
+}
+public Long getId() {
+return id;
+}
+public LocalDate getRegistration_date() {
+return registration_date;
+}
+public void setRegistration_date(LocalDate registration_date) {
+this.registration_date = registration_date;
+}
+}
+
+// --- File: model\Doctor.java ---
+package chsu.example.sports_medicine.model;
+@Data
+@Entity
+@Table(name = "doctors")
+public class Doctor {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "doctor_id")
+private Long doctorId;
+private String firstName;
+private String lastName;
+private String specialization;
+private String licenseNumber;
+// Getters and Setters
+public Long getDoctorId() {
+return doctorId;
+}
+public void setDoctorId(Long doctorId) {
+this.doctorId = doctorId;
+}
+public void setId(Long id) {
+this.doctorId = id;
+}
+public String getFirstName() {
+return firstName;
+}
+public void setFirstName(String firstName) {
+this.firstName = firstName;
+}
+public String getLastName() {
+return lastName;
+}
+public void setLastName(String lastName) {
+this.lastName = lastName;
+}
+public String getSpecialization() {
+return specialization;
+}
+public void setSpecialization(String specialization) {
+this.specialization = specialization;
+}
+public String getLicenseNumber() {
+return licenseNumber;
+}
+public void setLicenseNumber(String licenseNumber) {
+this.licenseNumber = licenseNumber;
+}
+}
+
+// --- File: model\ExaminationType.java ---
+package chsu.example.sports_medicine.model;
+@Data
+@Entity
+@Table(name = "examinationtypes")
+public class ExaminationType {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "type_id")
+private Long typeId;
+private String typeName;
+private String description;
+// Getters and Setters
+public Long getTypeId() {
+return typeId;
+}
+public void setTypeId(Long typeId) {
+this.typeId = typeId;
+}
+public void setId(Long id) {
+this.typeId = id;
+}
+public String getTypeName() {
+return typeName;
+}
+public void setTypeName(String typeName) {
+this.typeName = typeName;
+}
+public String getDescription() {
+return description;
+}
+public void setDescription(String description) {
+this.description = description;
+}
+}
+
+// --- File: model\MedicalExamination.java ---
+package chsu.example.sports_medicine.model;
+@Data
+@Entity
+@Table(name = "medicalexaminations")
+public class MedicalExamination {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "examination_id")
+private Long id; // Уникальный идентификатор медицинского осмотра
+// Отношения
+@ManyToOne
+@JoinColumn(name = "athlete_id")
+private Athlete athlete; // Спортсмен, связанный с этим осмотром
+@ManyToOne
+@JoinColumn(name = "doctor_id")
+private Doctor doctor; // Врач, который провел осмотр
+@ManyToOne
+@JoinColumn(name = "type_id")
+private ExaminationType examinationType; // Тип осмотра
+// Детали осмотра
+@Column(name = "examination_date")
+private LocalDate date; // Дата осмотра
+@Column(name = "next_examination_date")
+private LocalDate next_date; // Дата осмотра
+@Column(name = "conclusion")
+private String conclusion; // Результаты осмотра
+public Long getExaminationId() {
+return id;
+}
+// Default constructor (REQUIRED for Binder!)
+public MedicalExamination() {}
+// Getters and setters
+public Long getId() {
+return id;
+}
+public void setId(Long id) {
+this.id = id;
+}
+public Athlete getAthlete() {
+return athlete;
+}
+public void setAthlete(Athlete athlete) {
+this.athlete = athlete;
+}
+public Doctor getDoctor() {
+return doctor;
+}
+public void setDoctor(Doctor doctor) {
+this.doctor = doctor;
+}
+public ExaminationType getExaminationType() {
+return examinationType;
+}
+public void setExaminationType(ExaminationType examinationType) {
+this.examinationType = examinationType;
+}
+public LocalDate getDate() {
+return date;
+}
+public void setDate(LocalDate date) {
+this.date = date;
+}
+public String getResults() {
+return conclusion;
+}
+public void setResults(String conclusion) {
+this.conclusion = conclusion;
+}
+}
+
+// --- File: model\PhysioIndicator.java ---
+package chsu.example.sports_medicine.model;
+@Data
+@Entity
+@Table(name = "physioindicators")
+public class PhysioIndicator {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "indicator_id")
+private Long indicatorId;
+@ManyToOne
+@JoinColumn(name = "examination_id", nullable = false)
+private MedicalExamination examination;
+private String indicatorName;
+private Double measuredValue;
+private String unit;
+private Double normalMin;
+private Double normalMax;
+// Getters and Setters
+public Long getIndicatorId() {
+return indicatorId;
+}
+public void setIndicatorId(Long indicatorId) {
+this.indicatorId = indicatorId;
+}
+public void setId(Long id) {
+this.indicatorId = id;
+}
+public MedicalExamination getExamination() {
+return examination;
+}
+public void setExamination(MedicalExamination examination) {
+this.examination = examination;
+}
+public String getIndicatorName() {
+return indicatorName;
+}
+public void setIndicatorName(String indicatorName) {
+this.indicatorName = indicatorName;
+}
+public Double getMeasuredValue() {
+return measuredValue;
+}
+public void setMeasuredValue(Double measuredValue) {
+this.measuredValue = measuredValue;
+}
+public String getUnit() {
+return unit;
+}
+public void setUnit(String unit) {
+this.unit = unit;
+}
+public Double getNormalMin() {
+return normalMin;
+}
+public void setNormalMin(Double normalMin) {
+this.normalMin = normalMin;
+}
+public Double getNormalMax() {
+return normalMax;
+}
+public void setNormalMax(Double normalMax) {
+this.normalMax = normalMax;
+}
+}
+
+// --- File: model\Recommendation.java ---
+package chsu.example.sports_medicine.model;
+@Data
+@Entity
+@Table(name = "recommendations")
+public class Recommendation {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "recommendation_id")
+private Long recommendationId;
+@ManyToOne
+@JoinColumn(name = "examination_id", nullable = false)
+private MedicalExamination examination;
+private String recommendationText;
+private String priority;
+private String status;
+// Getters and Setters
+public Long getRecommendationId() {
+return recommendationId;
+}
+public void setRecommendationId(Long recommendationId) {
+this.recommendationId = recommendationId;
+}
+public void setId(Long id) {
+this.recommendationId = id;
+}
+public MedicalExamination getExamination() {
+return examination;
+}
+public void setExamination(MedicalExamination examination) {
+this.examination = examination;
+}
+public String getRecommendationText() {
+return recommendationText;
+}
+public void setRecommendationText(String recommendationText) {
+this.recommendationText = recommendationText;
+}
+public String getPriority() {
+return priority;
+}
+public void setPriority(String priority) {
+this.priority = priority;
+}
+public String getStatus() {
+return status;
+}
+public void setStatus(String status) {
+this.status = status;
+}
+}
+
+// --- File: repository\AthleteRepository.java ---
+package chsu.example.sports_medicine.repository;
+@Repository
+public interface AthleteRepository extends JpaRepository<Athlete, Long> {
+@Query("SELECT a FROM Athlete a WHERE " +
+"LOWER(a.first_name) LIKE LOWER(CONCAT('%', :filter, '%')) OR " +
+"LOWER(a.last_name) LIKE LOWER(CONCAT('%', :filter, '%')) OR " +
+"LOWER(a.sport_type) LIKE LOWER(CONCAT('%', :filter, '%'))")
+List<Athlete> search(@Param("filter") String filter);
+}
+
+// --- File: repository\DoctorRepository.java ---
+package chsu.example.sports_medicine.repository;
+@Repository
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
+@Query("SELECT d FROM Doctor d WHERE " +
+"LOWER(d.firstName) LIKE LOWER(CONCAT('%', :filter, '%')) OR " +
+"LOWER(d.lastName) LIKE LOWER(CONCAT('%', :filter, '%')) OR " +
+"LOWER(d.specialization) LIKE LOWER(CONCAT('%', :filter, '%'))")
+List<Doctor> search(@Param("filter") String filter);
+}
+
+// --- File: repository\ExaminationTypeRepository.java ---
+package chsu.example.sports_medicine.repository;
+@Repository
+public interface ExaminationTypeRepository extends JpaRepository<ExaminationType, Long> {
+@Query("SELECT et FROM ExaminationType et WHERE et.typeId = :typeId")
+List<ExaminationType> findByTypeId(@Param("typeId") Long typeId);
+}
+
+// --- File: repository\MedicalExaminationRepository.java ---
+package chsu.example.sports_medicine.repository;
+@Repository
+public interface MedicalExaminationRepository extends JpaRepository<MedicalExamination, Long> {
+long countByAthleteId(Long athleteId);
+long countByDoctorId(Long doctorId);
+long countByExaminationTypeId(Long typeId);
+}
+
+// --- File: repository\PhysioIndicatorRepository.java ---
+package chsu.example.sports_medicine.repository;
+@Repository
+public interface PhysioIndicatorRepository extends JpaRepository<PhysioIndicator, Long> {
+@Query("SELECT pi FROM PhysioIndicator pi WHERE pi.indicatorId = :indicatorId")
+List<PhysioIndicator> findByIndicatorId(@Param("indicatorId") Long indicatorId);
+long countByExaminationId(Long examinationId);
+void deleteByExaminationId(Long examinationId);
+}
+
+// --- File: repository\RecommendationRepository.java ---
+package chsu.example.sports_medicine.repository;
+@Repository
+public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
+@Query("SELECT r FROM Recommendation r WHERE r.recommendationId = :recommendationId")
+List<Recommendation> findByRecommendationId(@Param("recommendationId") Long recommendationId);
+long countByExaminationId(Long examinationId);
+void deleteByExaminationId(Long examinationId);
+}
+
+// --- File: service\AthleteService.java ---
+package chsu.example.sports_medicine.service;
+@Service
+public class AthleteService {
+@Autowired
+private AthleteRepository athleteRepository;
+@Autowired
+private MedicalExaminationRepository medicalExaminationRepository;
+@Autowired
+private PhysioIndicatorRepository physioIndicatorRepository;
+@Autowired
+private RecommendationRepository recommendationRepository;
+public List<Athlete> findAll() {
+return athleteRepository.findAll();
+}
+public List<Athlete> searchAthletes(String query) {
+return athleteRepository.search(query);
+}
+public Athlete saveAthlete(Athlete athlete) {
+return athleteRepository.save(athlete);
+}
+public void deleteAthlete(Long id) {
+athleteRepository.deleteById(id);
+}
+public List<Athlete> getAllAthletes() {
+return findAll();
+}
+public Map<String, Long> getAthleteDependencies(Long athleteId) {
+Map<String, Long> dependencies = new HashMap<>();
+long examinationCount = medicalExaminationRepository.countByAthleteId(athleteId);
+dependencies.put("Медицинские осмотры", examinationCount);
+// Для каждого осмотра подсчитать показатели и рекомендации
+List<MedicalExamination> examinations = medicalExaminationRepository.findAll(); // Можно оптимизировать, но для простоты
+long physioCount = 0;
+long recommendationCount = 0;
+for (MedicalExamination exam : examinations) {
+if (exam.getAthlete() != null && exam.getAthlete().getId().equals(athleteId)) {
+physioCount += physioIndicatorRepository.countByExaminationId(exam.getId());
+recommendationCount += recommendationRepository.countByExaminationId(exam.getId());
+}
+}
+dependencies.put("Физио показатели", physioCount);
+dependencies.put("Рекомендации", recommendationCount);
+return dependencies;
+}
+@Transactional
+public void cascadeDeleteAthlete(Long athleteId) {
+// Найти все осмотры атлета
+List<MedicalExamination> examinations = medicalExaminationRepository.findAll();
+for (MedicalExamination exam : examinations) {
+if (exam.getAthlete() != null && exam.getAthlete().getId().equals(athleteId)) {
+// Удалить связанные показатели и рекомендации
+physioIndicatorRepository.deleteByExaminationId(exam.getId());
+recommendationRepository.deleteByExaminationId(exam.getId());
+// Удалить осмотр
+medicalExaminationRepository.delete(exam);
+}
+}
+// Удалить атлета
+athleteRepository.deleteById(athleteId);
+}
+// Вспомогательные методы для репозиториев, если нужны
+public void deleteByExaminationId(Long examinationId) {
+physioIndicatorRepository.deleteByExaminationId(examinationId);
+}
+}
+
+// --- File: service\DoctorService.java ---
+package chsu.example.sports_medicine.service;
+@Service
+public class DoctorService {
+private final DoctorRepository doctorRepository;
+@Autowired
+private MedicalExaminationRepository medicalExaminationRepository;
+@Autowired
+private PhysioIndicatorRepository physioIndicatorRepository;
+@Autowired
+private RecommendationRepository recommendationRepository;
+@Autowired
+public DoctorService(DoctorRepository doctorRepository) {
+this.doctorRepository = doctorRepository;
+}
+public List<Doctor> findAll() {
+return doctorRepository.findAll();
+}
+public List<Doctor> searchDoctors(String query) {
+return doctorRepository.search(query);
+}
+public Doctor findById(Long id) {
+return doctorRepository.findById(id).orElse(null);
+}
+public Doctor save(Doctor doctor) {
+return doctorRepository.save(doctor);
+}
+public void deleteById(Long id) {
+doctorRepository.deleteById(id);
+}
+public Map<String, Long> getDoctorDependencies(Long doctorId) {
+Map<String, Long> dependencies = new HashMap<>();
+long examinationCount = medicalExaminationRepository.countByDoctorId(doctorId);
+dependencies.put("Медицинские осмотры", examinationCount);
+// Для каждого осмотра подсчитать показатели и рекомендации
+List<MedicalExamination> examinations = medicalExaminationRepository.findAll();
+long physioCount = 0;
+long recommendationCount = 0;
+for (MedicalExamination exam : examinations) {
+if (exam.getDoctor() != null && exam.getDoctor().getDoctorId().equals(doctorId)) {
+physioCount += physioIndicatorRepository.countByExaminationId(exam.getId());
+recommendationCount += recommendationRepository.countByExaminationId(exam.getId());
+}
+}
+dependencies.put("Физио показатели", physioCount);
+dependencies.put("Рекомендации", recommendationCount);
+return dependencies;
+}
+@Transactional
+public void cascadeDeleteDoctor(Long doctorId) {
+// Найти все осмотры доктора
+List<MedicalExamination> examinations = medicalExaminationRepository.findAll();
+for (MedicalExamination exam : examinations) {
+if (exam.getDoctor() != null && exam.getDoctor().getDoctorId().equals(doctorId)) {
+// Удалить связанные показатели и рекомендации
+physioIndicatorRepository.deleteByExaminationId(exam.getId());
+recommendationRepository.deleteByExaminationId(exam.getId());
+// Удалить осмотр
+medicalExaminationRepository.delete(exam);
+}
+}
+// Удалить доктора
+doctorRepository.deleteById(doctorId);
+}
+}
+
+// --- File: service\ExaminationTypeService.java ---
+package chsu.example.sports_medicine.service;
+@Service
+public class ExaminationTypeService {
+private final ExaminationTypeRepository examinationTypeRepository;
+@Autowired
+private MedicalExaminationRepository medicalExaminationRepository;
+@Autowired
+private PhysioIndicatorRepository physioIndicatorRepository;
+@Autowired
+private RecommendationRepository recommendationRepository;
+@Autowired
+public ExaminationTypeService(ExaminationTypeRepository examinationTypeRepository) {
+this.examinationTypeRepository = examinationTypeRepository;
+}
+public List<ExaminationType> findAll() {
+return examinationTypeRepository.findAll();
+}
+public ExaminationType findById(Long id) {
+return examinationTypeRepository.findById(id).orElse(null);
+}
+public ExaminationType save(ExaminationType examination) {
+return examinationTypeRepository.save(examination);
+}
+public void deleteById(Long id) {
+examinationTypeRepository.deleteById(id);
+}
+public Map<String, Long> getExaminationTypeDependencies(Long typeId) {
+Map<String, Long> dependencies = new HashMap<>();
+long examinationCount = medicalExaminationRepository.countByExaminationTypeId(typeId);
+dependencies.put("Медицинские осмотры", examinationCount);
+// Для каждого осмотра подсчитать показатели и рекомендации
+List<MedicalExamination> examinations = medicalExaminationRepository.findAll();
+long physioCount = 0;
+long recommendationCount = 0;
+for (MedicalExamination exam : examinations) {
+if (exam.getExaminationType() != null && exam.getExaminationType().getTypeId().equals(typeId)) {
+physioCount += physioIndicatorRepository.countByExaminationId(exam.getId());
+recommendationCount += recommendationRepository.countByExaminationId(exam.getId());
+}
+}
+dependencies.put("Физио показатели", physioCount);
+dependencies.put("Рекомендации", recommendationCount);
+return dependencies;
+}
+@Transactional
+public void cascadeDeleteExaminationType(Long typeId) {
+// Найти все осмотры типа
+List<MedicalExamination> examinations = medicalExaminationRepository.findAll();
+for (MedicalExamination exam : examinations) {
+if (exam.getExaminationType() != null && exam.getExaminationType().getTypeId().equals(typeId)) {
+// Удалить связанные показатели и рекомендации
+physioIndicatorRepository.deleteByExaminationId(exam.getId());
+recommendationRepository.deleteByExaminationId(exam.getId());
+// Удалить осмотр
+medicalExaminationRepository.delete(exam);
+}
+}
+// Удалить тип
+examinationTypeRepository.deleteById(typeId);
+}
+}
+
+// --- File: service\MedicalExaminationService.java ---
+package chsu.example.sports_medicine.service;
+@Service
+public class MedicalExaminationService {
+private final MedicalExaminationRepository medicalExaminationRepository;
+@Autowired
+private PhysioIndicatorRepository physioIndicatorRepository;
+@Autowired
+private RecommendationRepository recommendationRepository;
+@Autowired
+public MedicalExaminationService(MedicalExaminationRepository medicalExaminationRepository) {
+this.medicalExaminationRepository = medicalExaminationRepository;
+}
+public List<MedicalExamination> findAll() {
+return medicalExaminationRepository.findAll();
+}
+public MedicalExamination findById(Long id) {
+return medicalExaminationRepository.findById(id).orElse(null);
+}
+public MedicalExamination save(MedicalExamination medicalExamination) {
+return medicalExaminationRepository.save(medicalExamination);
+}
+public void deleteById(Long id) {
+medicalExaminationRepository.deleteById(id);
+}
+public Map<String, Long> getMedicalExaminationDependencies(Long examId) {
+Map<String, Long> dependencies = new HashMap<>();
+long physioCount = physioIndicatorRepository.countByExaminationId(examId);
+dependencies.put("Физио показатели", physioCount);
+long recommendationCount = recommendationRepository.countByExaminationId(examId);
+dependencies.put("Рекомендации", recommendationCount);
+return dependencies;
+}
+@Transactional
+public void cascadeDeleteMedicalExamination(Long examId) {
+// Удалить связанные показатели и рекомендации
+physioIndicatorRepository.deleteByExaminationId(examId);
+recommendationRepository.deleteByExaminationId(examId);
+// Удалить осмотр
+medicalExaminationRepository.deleteById(examId);
+}
+}
+
+// --- File: service\PhysioIndicatorService.java ---
+package chsu.example.sports_medicine.service;
+@Service
+public class PhysioIndicatorService {
+private final PhysioIndicatorRepository physioIndicatorRepository;
+@Autowired
+public PhysioIndicatorService(PhysioIndicatorRepository physioIndicatorRepository) {
+this.physioIndicatorRepository = physioIndicatorRepository;
+}
+public List<PhysioIndicator> findAll() {
+return physioIndicatorRepository.findAll();
+}
+public List<PhysioIndicator> findByIndicatorId(Long indicatorId) {
+return physioIndicatorRepository.findByIndicatorId(indicatorId);
+}
+public PhysioIndicator findById(Long id) {
+return physioIndicatorRepository.findById(id).orElse(null);
+}
+public PhysioIndicator save(PhysioIndicator physioIndicator) {
+return physioIndicatorRepository.save(physioIndicator);
+}
+public void deleteById(Long id) {
+physioIndicatorRepository.deleteById(id);
+}
+}
+
+// --- File: service\RecommendationService.java ---
+package chsu.example.sports_medicine.service;
+@Service
+public class RecommendationService {
+private final RecommendationRepository recommendationRepository;
+@Autowired
+public RecommendationService(RecommendationRepository recommendationRepository) {
+this.recommendationRepository = recommendationRepository;
+}
+public List<Recommendation> findAll() {
+return recommendationRepository.findAll();
+}
+public List<Recommendation> findByRecommendationId(Long recommendationId) {
+return recommendationRepository.findByRecommendationId(recommendationId);
+}
+public Recommendation findById(Long id) {
+return recommendationRepository.findById(id).orElse(null);
+}
+public Recommendation save(Recommendation recommendation) {
+return recommendationRepository.save(recommendation);
+}
+public void deleteById(Long id) {
+recommendationRepository.deleteById(id);
+}
+}
+
+// --- File: ui\AddAthleteDialog.java ---
+package chsu.example.sports_medicine.ui;
+@Component
+public class AddAthleteDialog extends Dialog {
+private final Binder<Athlete> binder = new Binder<>(Athlete.class);
+@Autowired
+public AddAthleteDialog(AthleteService athleteService) {
+this(athleteService, null, null);
+}
+public AddAthleteDialog(AthleteService athleteService, Athlete athlete) {
+this(athleteService, athlete, null);
+}
+public AddAthleteDialog(AthleteService athleteService, Athlete athlete, Runnable onSaveCallback) {
+setCloseOnEsc(false);
+setCloseOnOutsideClick(false);
+FormLayout formLayout = new FormLayout();
+TextField nameField = new TextField("Name");
+TextField surnameField = new TextField("Surname");
+DatePicker ageField = new DatePicker("Date of Birth");
+TextField sportType = new TextField("Sport type");
+TextField phone = new TextField("Phone");
+DatePicker regField = new DatePicker("Registration Date");
+formLayout.add(nameField, surnameField, ageField, sportType, phone, regField);
+binder.forField(nameField).bind(Athlete::getFirstName, Athlete::setFirstName);
+binder.forField(surnameField).bind(Athlete::getLastName, Athlete::setLastName);
+binder.forField(ageField).bind(Athlete::getDateOfBirth, Athlete::setDate_of_birth);
+binder.forField(sportType).bind(Athlete::getSport_type, Athlete::setSport_type);
+binder.forField(phone).bind(Athlete::getPhone, Athlete::setPhone);
+binder.forField(regField).bind(Athlete::getRegistration_date, Athlete::setRegistration_date);
+if (athlete != null) {
+binder.readBean(athlete);
+}
+Button saveButton = new Button("Save", event -> {
+if (binder.validate().isOk()) {
+Athlete athleteToSave = athlete != null ? athlete : new Athlete();
+binder.writeBeanIfValid(athleteToSave);
+athleteService.saveAthlete(athleteToSave);
+if (onSaveCallback != null) {
+onSaveCallback.run();
+}
+close();
+}
+});
+Button cancelButton = new Button("Cancel", event -> close());
+VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
+buttonLayout.setSpacing(true);
+add(formLayout, buttonLayout);
+}
+}
+
+// --- File: ui\AddDoctorDialog.java ---
+package chsu.example.sports_medicine.ui;
+public class AddDoctorDialog extends Dialog {
+private final Binder<Doctor> binder = new Binder<>(Doctor.class);
+public AddDoctorDialog(DoctorService doctorService) {
+this(doctorService, null, null);
+}
+public AddDoctorDialog(DoctorService doctorService, Doctor doctor) {
+this(doctorService, doctor, null);
+}
+public AddDoctorDialog(DoctorService doctorService, Doctor doctor, Runnable onSaveCallback) {
+setCloseOnEsc(false);
+setCloseOnOutsideClick(false);
+FormLayout formLayout = new FormLayout();
+TextField firstNameField = new TextField("First Name");
+TextField lastNameField = new TextField("Last Name");
+TextField specializationField = new TextField("Specialization");
+TextField licenseNumberField = new TextField("License Number");
+formLayout.add(firstNameField, lastNameField, specializationField, licenseNumberField);
+binder.forField(firstNameField).bind(Doctor::getFirstName, Doctor::setFirstName);
+binder.forField(lastNameField).bind(Doctor::getLastName, Doctor::setLastName);
+binder.forField(specializationField).bind(Doctor::getSpecialization, Doctor::setSpecialization);
+binder.forField(licenseNumberField).bind(Doctor::getLicenseNumber, Doctor::setLicenseNumber);
+if (doctor != null) {
+binder.readBean(doctor);
+}
+Button saveButton = new Button("Save", event -> {
+if (binder.validate().isOk()) {
+Doctor doctorToSave = doctor != null ? doctor : new Doctor();
+binder.writeBeanIfValid(doctorToSave);
+doctorService.save(doctorToSave);
+if (onSaveCallback != null) {
+onSaveCallback.run();
+}
+close();
+}
+});
+Button cancelButton = new Button("Cancel", event -> close());
+VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
+buttonLayout.setSpacing(true);
+add(formLayout, buttonLayout);
+}
+}
+
+// --- File: ui\AddExaminationDialog.java ---
+package chsu.example.sports_medicine.ui;
+public class AddExaminationDialog extends Dialog {
+private final Binder<ExaminationType> binder = new Binder<>(ExaminationType.class);
+public AddExaminationDialog(ExaminationTypeService examinationTypeService) {
+this(examinationTypeService, null, null);
+}
+public AddExaminationDialog(ExaminationTypeService examinationTypeService, ExaminationType examinationType) {
+this(examinationTypeService, examinationType, null);
+}
+public AddExaminationDialog(ExaminationTypeService examinationTypeService, ExaminationType examinationType, Runnable onSaveCallback) {
+setCloseOnEsc(false);
+setCloseOnOutsideClick(false);
+FormLayout formLayout = new FormLayout();
+TextField nameField = new TextField("Type Name");
+TextField descriptionField = new TextField("Description");
+formLayout.add(nameField, descriptionField);
+binder.forField(nameField).bind(ExaminationType::getTypeName, ExaminationType::setTypeName);
+binder.forField(descriptionField).bind(ExaminationType::getDescription, ExaminationType::setDescription);
+if (examinationType != null) {
+binder.readBean(examinationType);
+}
+Button saveButton = new Button("Save", event -> {
+if (binder.validate().isOk()) {
+ExaminationType examinationToSave = examinationType != null ? examinationType : new ExaminationType();
+binder.writeBeanIfValid(examinationToSave);
+examinationTypeService.save(examinationToSave);
+if (onSaveCallback != null) {
+onSaveCallback.run();
+}
+close();
+}
+});
+Button cancelButton = new Button("Cancel", event -> close());
+VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
+buttonLayout.setSpacing(true);
+add(formLayout, buttonLayout);
+}
+}
+
+// --- File: ui\AddMedicalExaminationDialog.java ---
+package chsu.example.sports_medicine.ui;
+public class AddMedicalExaminationDialog extends Dialog {
+private final MedicalExaminationService medicalExaminationService;
+private MedicalExamination medicalExamination;
+private final Runnable onSaveCallback;
+private final TextField conclusionField = new TextField("Заключение");
+private final DatePicker datePicker = new DatePicker("Дата осмотра");
+private final ComboBox<Athlete> athleteComboBox = new ComboBox<>("Спортсмен");
+private final ComboBox<Doctor> doctorComboBox = new ComboBox<>("Врач");
+private final ComboBox<ExaminationType> examinationTypeComboBox = new ComboBox<>("Тип осмотра");
+@Autowired
+public AddMedicalExaminationDialog(MedicalExaminationService medicalExaminationService,
+AthleteService athleteService,
+DoctorService doctorService,
+ExaminationTypeService examinationTypeService) {
+this(medicalExaminationService, athleteService, doctorService, examinationTypeService, null, null);
+}
+public AddMedicalExaminationDialog(MedicalExaminationService medicalExaminationService,
+AthleteService athleteService,
+DoctorService doctorService,
+ExaminationTypeService examinationTypeService,
+MedicalExamination medicalExamination) {
+this(medicalExaminationService, athleteService, doctorService, examinationTypeService, medicalExamination, null);
+}
+public AddMedicalExaminationDialog(MedicalExaminationService medicalExaminationService,
+AthleteService athleteService,
+DoctorService doctorService,
+ExaminationTypeService examinationTypeService,
+MedicalExamination medicalExamination,
+Runnable onSaveCallback) {
+this.medicalExaminationService = medicalExaminationService;
+this.medicalExamination = medicalExamination;
+this.onSaveCallback = onSaveCallback;
+setHeaderTitle(medicalExamination == null ? "Добавить медицинский осмотр" : "Изменить медицинский осмотр");
+setModal(true);
+FormLayout formLayout = new FormLayout();
+athleteComboBox.setItems(athleteService.findAll());
+athleteComboBox.setItemLabelGenerator(athlete -> athlete.getFirstName() + " " + athlete.getLastName());
+doctorComboBox.setItems(doctorService.findAll());
+doctorComboBox.setItemLabelGenerator(doctor -> doctor.getFirstName() + " " + doctor.getLastName());
+examinationTypeComboBox.setItems(examinationTypeService.findAll());
+examinationTypeComboBox.setItemLabelGenerator(ExaminationType::getTypeName);
+formLayout.add(conclusionField, datePicker, athleteComboBox, doctorComboBox, examinationTypeComboBox);
+if (medicalExamination != null) {
+conclusionField.setValue(medicalExamination.getResults() != null ? medicalExamination.getResults() : "");
+datePicker.setValue(medicalExamination.getDate());
+athleteComboBox.setValue(medicalExamination.getAthlete());
+doctorComboBox.setValue(medicalExamination.getDoctor());
+examinationTypeComboBox.setValue(medicalExamination.getExaminationType());
+}
+Button saveButton = new Button("Сохранить", event -> saveMedicalExamination());
+Button cancelButton = new Button("Отмена", event -> close());
+HorizontalLayout buttonsLayout = new HorizontalLayout(saveButton, cancelButton);
+buttonsLayout.setJustifyContentMode(HorizontalLayout.JustifyContentMode.END);
+add(formLayout, buttonsLayout);
+}
+private void saveMedicalExamination() {
+MedicalExamination examinationToSave = medicalExamination != null ? medicalExamination : new MedicalExamination();
+examinationToSave.setAthlete(athleteComboBox.getValue());
+examinationToSave.setDoctor(doctorComboBox.getValue());
+examinationToSave.setExaminationType(examinationTypeComboBox.getValue());
+examinationToSave.setDate(datePicker.getValue());
+examinationToSave.setResults(conclusionField.getValue());
+try {
+medicalExaminationService.save(examinationToSave);
+Notification.show(medicalExamination == null ? "Медицинский осмотр добавлен" : "Медицинский осмотр изменен");
+if (onSaveCallback != null) {
+onSaveCallback.run();
+}
+close();
+} catch (Exception e) {
+Notification.show("Ошибка при сохранении: " + e.getMessage());
+}
+}
+}
+
+// --- File: ui\AddPhysioIndicatorDialog.java ---
+package chsu.example.sports_medicine.ui;
+public class AddPhysioIndicatorDialog extends Dialog {
+private final Binder<PhysioIndicator> binder = new Binder<>(PhysioIndicator.class);
+private final ComboBox<MedicalExamination> examinationField = new ComboBox<>("Examination");
+private final TextField indicatorNameField = new TextField("Indicator Name");
+private final NumberField measuredValueField = new NumberField("Measured Value");
+private final TextField unitField = new TextField("Unit");
+private final NumberField normalMinField = new NumberField("Normal Min");
+private final NumberField normalMaxField = new NumberField("Normal Max");
+@Autowired
+public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
+MedicalExaminationService medicalExaminationService) {
+this(physioIndicatorService, medicalExaminationService, null, null);
+}
+public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
+MedicalExaminationService medicalExaminationService,
+PhysioIndicator physioIndicator) {
+this(physioIndicatorService, medicalExaminationService, physioIndicator, null);
+}
+public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
+MedicalExaminationService medicalExaminationService,
+PhysioIndicator physioIndicator,
+Runnable onSaveCallback) {
+setCloseOnEsc(false);
+setCloseOnOutsideClick(false);
+setHeaderTitle(physioIndicator == null ? "Добавить физиотерапевтический показатель" : "Изменить физиотерапевтический показатель");
+setModal(true);
+FormLayout formLayout = new FormLayout();
+examinationField.setItems(medicalExaminationService.findAll());
+examinationField.setItemLabelGenerator(medicalExamination -> medicalExamination.getId().toString());
+formLayout.add(examinationField, indicatorNameField, measuredValueField, unitField, normalMinField, normalMaxField);
+binder.forField(examinationField).bind(PhysioIndicator::getExamination, PhysioIndicator::setExamination);
+binder.forField(indicatorNameField).bind(PhysioIndicator::getIndicatorName, PhysioIndicator::setIndicatorName);
+binder.forField(measuredValueField).bind(PhysioIndicator::getMeasuredValue, PhysioIndicator::setMeasuredValue);
+binder.forField(unitField).bind(PhysioIndicator::getUnit, PhysioIndicator::setUnit);
+binder.forField(normalMinField).bind(PhysioIndicator::getNormalMin, PhysioIndicator::setNormalMin);
+binder.forField(normalMaxField).bind(PhysioIndicator::getNormalMax, PhysioIndicator::setNormalMax);
+if (physioIndicator != null) {
+binder.readBean(physioIndicator);
+}
+Button saveButton = new Button("Save", event -> {
+if (binder.validate().isOk()) {
+PhysioIndicator indicatorToSave = physioIndicator != null ? physioIndicator : new PhysioIndicator();
+binder.writeBeanIfValid(indicatorToSave);
+physioIndicatorService.save(indicatorToSave);
+if (onSaveCallback != null) {
+onSaveCallback.run();
+}
+close();
+}
+});
+Button cancelButton = new Button("Cancel", event -> close());
+VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
+buttonLayout.setSpacing(true);
+add(formLayout, buttonLayout);
+}
+}
+
+// --- File: ui\AddRecommendationDialog.java ---
+package chsu.example.sports_medicine.ui;
+public class AddRecommendationDialog extends Dialog {
+FormLayout formLayout = new FormLayout();
+ComboBox<MedicalExamination> examinationField = new ComboBox<>("Examination");
+TextField recommendationTextField = new TextField("Recommendation Text");
+TextField priorityField = new TextField("Priority");
+TextField statusField = new TextField("Status");
+private final Binder<Recommendation> binder = new Binder<>(Recommendation.class);
+@Autowired
+public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService) {
+this(recommendationService, medicalExaminationService, null, null);
+}
+public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService, Recommendation recommendation) {
+this(recommendationService, medicalExaminationService, recommendation, null);
+}
+public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService, Recommendation recommendation, Runnable onSaveCallback) {
+setCloseOnEsc(false);
+setCloseOnOutsideClick(false);
+setHeaderTitle(recommendation == null ? "Добавить рекомендацию" : "Изменить рекомендацию");
+examinationField.setItems(medicalExaminationService.findAll());
+examinationField.setItemLabelGenerator(medicalExamination -> medicalExamination.getId().toString());
+formLayout.add(examinationField, recommendationTextField, priorityField, statusField);
+binder.forField(examinationField).bind(Recommendation::getExamination, Recommendation::setExamination);
+binder.forField(recommendationTextField).bind(Recommendation::getRecommendationText, Recommendation::setRecommendationText);
+binder.forField(priorityField).bind(Recommendation::getPriority, Recommendation::setPriority);
+binder.forField(statusField).bind(Recommendation::getStatus, Recommendation::setStatus);
+if (recommendation != null) {
+binder.readBean(recommendation);
+}
+Button saveButton = new Button("Save", event -> {
+if (binder.validate().isOk()) {
+Recommendation recommendationToSave = recommendation != null ? recommendation : new Recommendation();
+binder.writeBeanIfValid(recommendationToSave);
+recommendationService.save(recommendationToSave);
+if (onSaveCallback != null) {
+onSaveCallback.run();
+}
+close();
+}
+});
+Button cancelButton = new Button("Cancel", event -> close());
+VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
+buttonLayout.setSpacing(true);
+add(formLayout, buttonLayout);
+}
+}
+
+// --- File: ui\AthletesView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "athletes", layout = MainLayout.class)
+public class AthletesView extends VerticalLayout {
+private final AthleteService athleteService;
+private final Grid<Athlete> grid = new Grid<>(Athlete.class);
+@Autowired
+public AthletesView(AthleteService athleteService) {
+this.athleteService = athleteService;
+addClassName("athletes-view");
+setSizeFull();
+// Add header and description
+VerticalLayout headerSection = new VerticalLayout();
+headerSection.addClassName("header-section");
+headerSection.add(new com.vaadin.flow.component.html.H1("Управление атлетами"));
+headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять информацией о спортсменах, включая их личные данные, спортивные достижения и медицинские показатели."));
+configureGrid();
+add(headerSection, getToolbar(), grid);
+updateList();
+}
+private void configureGrid() {
+grid.addClassName("athletes-grid");
+grid.setSizeFull();
+grid.setColumns("id", "first_name", "last_name", "date_of_birth", "sport_type", "phone", "registration_date");
+grid.getColumnByKey("id").setHeader("ID");
+grid.getColumnByKey("first_name").setHeader("Имя");
+grid.getColumnByKey("last_name").setHeader("Фамилия");
+grid.getColumnByKey("date_of_birth").setHeader("Дата рождения");
+grid.getColumnByKey("sport_type").setHeader("Тип спорта");
+grid.getColumnByKey("phone").setHeader("Телефон");
+grid.getColumnByKey("registration_date").setHeader("Дата регистрации");
+}
+private VerticalLayout getToolbar() {
+TextField searchField = new TextField();
+searchField.setPlaceholder("Поиск по имени или фамилии");
+searchField.addValueChangeListener(event -> {
+String query = event.getValue();
+if (query.isEmpty()) {
+updateList();
+} else {
+grid.setItems(athleteService.searchAthletes(query));
+}
+});
+Button addAthleteButton = new Button("Добавить атлета", click -> {
+AddAthleteDialog dialog = new AddAthleteDialog(athleteService, null, this::updateList);
+dialog.open();
+});
+Button editAthleteButton = new Button("Изменить атлета", click -> {
+Athlete selectedAthlete = grid.asSingleSelect().getValue();
+if (selectedAthlete != null) {
+AddAthleteDialog dialog = new AddAthleteDialog(athleteService, selectedAthlete, this::updateList);
+dialog.open();
+} else {
+Notification.show("Выберите атлета для изменения");
+}
+});
+Button deleteAthleteButton = new Button("Удалить атлета", click -> {
+Athlete selectedAthlete = grid.asSingleSelect().getValue();
+if (selectedAthlete != null) {
+deleteAthlete(selectedAthlete);
+} else {
+Notification.show("Выберите атлета для удаления");
+}
+});
+return new VerticalLayout(searchField, addAthleteButton, editAthleteButton, deleteAthleteButton);
+}
+private void updateList() {
+grid.setItems(athleteService.findAll());
+}
+private void deleteAthlete(Athlete athlete) {
+String displayName = athlete.getFirstName() + " " + athlete.getLastName();
+var dependencies = athleteService.getAthleteDependencies(athlete.getId());
+CascadeDeleteDialog dialog = new CascadeDeleteDialog("атлета", displayName, dependencies, () -> {
+try {
+athleteService.cascadeDeleteAthlete(athlete.getId());
+updateList();
+Notification.show("Атлет и связанные данные удалены");
+} catch (Exception e) {
+Notification.show("Ошибка при удалении: " + e.getMessage());
+}
+});
+dialog.open();
+}
+}
+
+// --- File: ui\CascadeDeleteDialog.java ---
+package chsu.example.sports_medicine.ui;
+public class CascadeDeleteDialog extends Dialog {
+public CascadeDeleteDialog(String entityName, String entityDisplayName, Map<String, Long> dependencies, Runnable confirmAction) {
+setModal(true);
+setCloseOnEsc(true);
+setCloseOnOutsideClick(false);
+H2 title = new H2("Внимание! Удаление " + entityName.toLowerCase() + " " + entityDisplayName + " приведет к удалению следующих связанных данных:");
+title.getStyle().set("color", "var(--lumo-error-color)");
+VerticalLayout dependenciesLayout = new VerticalLayout();
+dependenciesLayout.setSpacing(false);
+dependenciesLayout.setPadding(false);
+if (dependencies.isEmpty() || dependencies.values().stream().allMatch(count -> count == 0)) {
+// Нет зависимостей, простой диалог
+Paragraph noDepsMessage = new Paragraph("Вы уверены, что хотите удалить " + entityName.toLowerCase() + " " + entityDisplayName + "?");
+add(noDepsMessage);
+} else {
+// Есть зависимости, показать список
+for (Map.Entry<String, Long> entry : dependencies.entrySet()) {
+if (entry.getValue() > 0) {
+HorizontalLayout depRow = new HorizontalLayout();
+depRow.setAlignItems(com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER);
+depRow.setSpacing(true);
+Span icon = new Span(VaadinIcon.WARNING.create());
+icon.getStyle().set("color", "var(--lumo-error-color)");
+Span text = new Span(entry.getKey() + ": " + entry.getValue());
+text.addClassNames(LumoUtility.FontWeight.BOLD);
+depRow.add(icon, text);
+dependenciesLayout.add(depRow);
+}
+}
+add(title, dependenciesLayout);
+}
+Button confirmButton = new Button("Удалить", event -> {
+confirmAction.run();
+close();
+});
+confirmButton.getStyle().set("color", "var(--lumo-error-color)");
+confirmButton.addClassNames(LumoUtility.Background.ERROR_10);
+Button cancelButton = new Button("Отмена", event -> close());
+HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
+buttonsLayout.setJustifyContentMode(com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END);
+buttonsLayout.setSpacing(true);
+VerticalLayout layout = new VerticalLayout();
+layout.setSpacing(true);
+layout.setPadding(true);
+layout.add(buttonsLayout);
+add(layout);
+}
+}
+
+// --- File: ui\ConfirmDialog.java ---
+package chsu.example.sports_medicine.ui;
+public class ConfirmDialog extends Dialog {
+public ConfirmDialog(String title, String message, 
+String confirmText, String cancelText,
+Runnable confirmAction) {
+setModal(true);
+setCloseOnEsc(true);
+setCloseOnOutsideClick(false);
+H2 titleLabel = new H2(title);
+Paragraph messageLabel = new Paragraph(message);
+Button confirmButton = new Button(confirmText, event -> {
+confirmAction.run();
+close();
+});
+confirmButton.getStyle().set("color", "var(--lumo-error-color)");
+Button cancelButton = new Button(cancelText, event -> close());
+HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
+buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+buttonsLayout.setSpacing(true);
+VerticalLayout layout = new VerticalLayout(titleLabel, messageLabel, buttonsLayout);
+layout.setSpacing(true);
+layout.setPadding(true);
+add(layout);
+}
+}
+// --- File: ui\DashboardView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "dashboard", layout = MainLayout.class)
+public class DashboardView extends VerticalLayout {
+private final AthleteService athleteService;
+private final RecommendationService recommendationService;
+@Autowired
+public DashboardView(AthleteService athleteService,
+DoctorService doctorService,
+MedicalExaminationService medicalExaminationService,
+RecommendationService recommendationService,
+PhysioIndicatorService physioIndicatorService) {
+this.athleteService = athleteService;
+this.recommendationService = recommendationService;
+setSizeFull();
+setSpacing(true);
+setPadding(true);
+addClassName("dashboard-view");
+// Add header and description
+VerticalLayout headerSection = new VerticalLayout();
+headerSection.addClassName("header-section");
+headerSection.add(new com.vaadin.flow.component.html.H1("Медицинский аналитический дэшборд"));
+headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете видеть ключевые показатели здоровья спортсменов, аналитику обследований и рекомендации для улучшения спортивных результатов."));
+add(headerSection, createKpiSection(), createChartsSection());
+}
+private HorizontalLayout createKpiSection() {
+HorizontalLayout kpiLayout = new HorizontalLayout();
+kpiLayout.setWidthFull();
+kpiLayout.setSpacing(true);
+kpiLayout.add(createKpiCard("Всего спортсменов", String.valueOf(athleteService.findAll().size())));
+kpiLayout.add(createKpiCard("Обследования за месяц", "15")); // Placeholder
+kpiLayout.add(createKpiCard("Отклонения от нормы", "3")); // Placeholder
+kpiLayout.add(createKpiCard("Активные рекомендации", String.valueOf(recommendationService.findAll().size())));
+return kpiLayout;
+}
+private Div createKpiCard(String title, String value) {
+Div card = new Div();
+card.addClassName("kpi-card");
+H2 titleElement = new H2(title);
+Span valueElement = new Span(value);
+card.add(titleElement, valueElement);
+return card;
+}
+private HorizontalLayout createChartsSection() {
+HorizontalLayout chartsLayout = new HorizontalLayout();
+chartsLayout.setWidthFull();
+chartsLayout.setSpacing(true);
+chartsLayout.add(createAgeDistributionStats());
+chartsLayout.add(createSportDistributionStats());
+return chartsLayout;
+}
+private Chart createAgeDistributionStats() {
+Chart chart = new Chart(ChartType.COLUMN);
+chart.addClassName("stats-card");
+Configuration conf = chart.getConfiguration();
+conf.setTitle("Возрастное распределение спортсменов");
+XAxis xAxis = new XAxis();
+xAxis.setType(AxisType.CATEGORY); // Говорим графику брать подписи из имен DataSeriesItem
+xAxis.setTitle("Возрастные группы"); // Необязательно: название самой оси
+conf.addxAxis(xAxis);
+List<Athlete> athletes = athleteService.findAll();
+Map<String, Long> ageGroups = athletes.stream()
+.filter(athlete -> athlete.getDateOfBirth() != null)
+.map(athlete -> {
+int age = LocalDate.now().getYear() - athlete.getDateOfBirth().getYear();
+if (age < 20) return "10-19";
+else if (age < 30) return "20-29";
+else if (age < 40) return "30-39";
+else return "40+";
+})
+.collect(Collectors.groupingBy(age -> age, Collectors.counting()));
+DataSeries series = new DataSeries("Количество");
+ageGroups.forEach((ageGroup, count) -> {
+DataSeriesItem item = new DataSeriesItem(ageGroup, count);
+series.add(item);
+});
+List<String> orderedKeys = List.of("10-19", "20-29", "30-39", "40+");
+for (String key : orderedKeys) {
+// Если в какой-то группе никого нет, ставим 0, иначе берем значение из map
+Long count = ageGroups.getOrDefault(key, 0L);
+// Первый параметр (key) станет подписью столбца, второй (count) - высотой
+DataSeriesItem item = new DataSeriesItem(key, count);
+// Можно раскрасить каждый столбец в свой цвет (по желанию)
+// item.setColor(DataSeriesItem.Color.parseColor("#HEXCODE")); 
+series.add(item);
+}
+conf.addSeries(series);
+PlotOptionsColumn options = new PlotOptionsColumn();
+options.getDataLabels().setEnabled(true);
+series.setPlotOptions(options);
+return chart;
+}
+private Chart createSportDistributionStats() {
+Chart chart = new Chart(ChartType.PIE);
+chart.addClassName("stats-card");
+Configuration conf = chart.getConfiguration();
+conf.setTitle("Распределение по видам спорта");
+Map<String, Long> sportDistribution = athleteService.findAll().stream()
+.collect(Collectors.groupingBy(Athlete::getSport_type, Collectors.counting()));
+DataSeries series = new DataSeries();
+sportDistribution.forEach((sport, count) -> {
+DataSeriesItem item = new DataSeriesItem(sport, count);
+series.add(item);
+});
+conf.addSeries(series);
+PlotOptionsPie options = new PlotOptionsPie();
+options.setAllowPointSelect(true);
+options.setShowInLegend(true);
+series.setPlotOptions(options);
+return chart;
+}
+}
+
+// --- File: ui\DoctorsView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "doctors", layout = MainLayout.class)
+public class DoctorsView extends VerticalLayout {
+private final DoctorService doctorService;
+private final Grid<Doctor> grid = new Grid<>(Doctor.class);
+@Autowired
+public DoctorsView(DoctorService doctorService) {
+this.doctorService = doctorService;
+addClassName("doctors-view");
+setSizeFull();
+// Add header and description
+VerticalLayout headerSection = new VerticalLayout();
+headerSection.addClassName("header-section");
+headerSection.add(new com.vaadin.flow.component.html.H1("Управление врачами"));
+headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять информацией о врачах, включая их специализацию, лицензионные данные и медицинские квалификации."));
+configureGrid();
+add(headerSection, getToolbar(), grid);
+updateList();
+}
+private void configureGrid() {
+grid.addClassName("doctors-grid");
+grid.setSizeFull();
+grid.setColumns("doctorId", "firstName", "lastName", "specialization", "licenseNumber");
+grid.getColumnByKey("doctorId").setHeader("ID");
+grid.getColumnByKey("firstName").setHeader("Имя");
+grid.getColumnByKey("lastName").setHeader("Фамилия");
+grid.getColumnByKey("specialization").setHeader("Специализация");
+grid.getColumnByKey("licenseNumber").setHeader("Номер лицензии");
+}
+private VerticalLayout getToolbar() {
+TextField searchField = new TextField();
+searchField.setPlaceholder("Поиск по имени или фамилии");
+searchField.addValueChangeListener(event -> {
+String query = event.getValue();
+if (query.isEmpty()) {
+updateList();
+} else {
+grid.setItems(doctorService.searchDoctors(query));
+}
+});
+Button addDoctorButton = new Button("Добавить доктора", click -> {
+AddDoctorDialog dialog = new AddDoctorDialog(doctorService, null, this::updateList);
+dialog.open();
+});
+Button editDoctorButton = new Button("Изменить доктора", click -> {
+Doctor selectedDoctor = grid.asSingleSelect().getValue();
+if (selectedDoctor != null) {
+AddDoctorDialog dialog = new AddDoctorDialog(doctorService, selectedDoctor, this::updateList);
+dialog.open();
+} else {
+Notification.show("Выберите доктора для изменения");
+}
+});
+Button deleteDoctorButton = new Button("Удалить доктора", click -> {
+Doctor selectedDoctor = grid.asSingleSelect().getValue();
+if (selectedDoctor != null) {
+deleteDoctor(selectedDoctor);
+} else {
+Notification.show("Выберите доктора для удаления");
+}
+});
+return new VerticalLayout(searchField, addDoctorButton, editDoctorButton, deleteDoctorButton);
+}
+private void updateList() {
+grid.setItems(doctorService.findAll());
+}
+private void deleteDoctor(Doctor doctor) {
+String displayName = doctor.getFirstName() + " " + doctor.getLastName();
+var dependencies = doctorService.getDoctorDependencies(doctor.getDoctorId());
+CascadeDeleteDialog dialog = new CascadeDeleteDialog("доктора", displayName, dependencies, () -> {
+try {
+doctorService.cascadeDeleteDoctor(doctor.getDoctorId());
+updateList();
+Notification.show("Доктор и связанные данные удалены");
+} catch (Exception e) {
+Notification.show("Ошибка при удалении: " + e.getMessage());
+}
+});
+dialog.open();
+}
+}
+
+// --- File: ui\ExaminationsView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "examinations", layout = MainLayout.class)
+public class ExaminationsView extends VerticalLayout {
+private final ExaminationTypeService examinationTypeService;
+private final Grid<ExaminationType> grid = new Grid<>(ExaminationType.class);
+@Autowired
+public ExaminationsView(ExaminationTypeService examinationTypeService) {
+this.examinationTypeService = examinationTypeService;
+addClassName("examinations-view");
+setSizeFull();
+// Add header and description
+VerticalLayout headerSection = new VerticalLayout();
+headerSection.addClassName("header-section");
+headerSection.add(new com.vaadin.flow.component.html.H1("Управление типами обследований"));
+headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять различными типами медицинских обследований, включая их описания и параметры."));
+configureGrid();
+add(headerSection, getToolbar(), grid);
+updateList();
+}
+private void configureGrid() {
+grid.addClassName("examinations-grid");
+grid.setSizeFull();
+grid.setColumns("typeId", "typeName", "description");
+grid.getColumnByKey("typeId").setHeader("ID");
+grid.getColumnByKey("typeName").setHeader("Название");
+grid.getColumnByKey("description").setHeader("Описание");
+}
+private VerticalLayout getToolbar() {
+TextField searchField = new TextField();
+searchField.setPlaceholder("Поиск по id");
+searchField.addValueChangeListener(event -> {
+String query = event.getValue();
+if (query.isEmpty()) {
+updateList();
+} else {
+try {
+Long id = Long.parseLong(query);
+grid.setItems(examinationTypeService.findById(id));
+} catch (NumberFormatException e) {
+Notification.show("Введите корректный indicatorId");
+}
+}
+});
+Button addExaminationButton = new Button("Добавить проверку", click -> {
+AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService, null, this::updateList);
+dialog.open();
+});
+Button editExaminationButton = new Button("Изменить тип", click -> {
+ExaminationType selectedExaminationType = grid.asSingleSelect().getValue();
+if (selectedExaminationType != null) {
+AddExaminationDialog dialog = new AddExaminationDialog(examinationTypeService, selectedExaminationType, this::updateList);
+dialog.open();
+} else {
+Notification.show("Выберите тип для изменения");
+}
+});
+Button deleteExaminationTypeButton = new Button("Удалить тип", click -> {
+ExaminationType selectedExaminationType = grid.asSingleSelect().getValue();
+if (selectedExaminationType != null) {
+deleteExaminationType(selectedExaminationType);
+} else {
+Notification.show("Выберите тип для удаления");
+}
+});
+return new VerticalLayout(searchField, addExaminationButton, editExaminationButton, deleteExaminationTypeButton);
+}
+private void updateList() {
+grid.setItems(examinationTypeService.findAll());
+}
+private void deleteExaminationType(ExaminationType examinationType) {
+String displayName = examinationType.getTypeName();
+var dependencies = examinationTypeService.getExaminationTypeDependencies(examinationType.getTypeId());
+CascadeDeleteDialog dialog = new CascadeDeleteDialog("типа обследования", displayName, dependencies, () -> {
+try {
+examinationTypeService.cascadeDeleteExaminationType(examinationType.getTypeId());
+updateList();
+Notification.show("Тип обследования и связанные данные удалены");
+} catch (Exception e) {
+Notification.show("Ошибка при удалении: " + e.getMessage());
+}
+});
+dialog.open();
+}
+}
+
+// --- File: ui\MainLayout.java ---
+package chsu.example.sports_medicine.ui;
+@PageTitle("Спортивная медицина")
+public class MainLayout extends AppLayout {
+public MainLayout() {
+createHeader();
+createDrawer();
+addClassName("sports-medicine-app");
+}
+private void createHeader() {
+DrawerToggle toggle = new DrawerToggle();
+toggle.getElement().setAttribute("aria-label", "Меню");
+Header header = new Header(toggle);
+header.addClassNames(
+"bg-base", "border-b", "border-contrast-10",
+"box-border", "flex", "h-xl", "items-center", "justify-between", "w-full", "px-m"
+);
+addToNavbar(header);
+}
+private void createDrawer() {
+SideNav sideNav = new SideNav();
+sideNav.addItem(
+new SideNavItem("Главная страница", MainView.class, VaadinIcon.DESKTOP.create()),
+new SideNavItem("Атлеты", AthletesView.class, VaadinIcon.USERS.create()),
+new SideNavItem("Доктора", DoctorsView.class, VaadinIcon.DOCTOR.create()),
+new SideNavItem("Тип проверки", ExaminationsView.class, VaadinIcon.CHECK_SQUARE_O.create()),
+new SideNavItem("Мед. осмотр", MedicalExaminationsView.class, VaadinIcon.HEART.create()),
+new SideNavItem("Физио показатели", PhysioIndicatorsView.class, VaadinIcon.CHART.create()),
+new SideNavItem("Рекомендации", RecommendationsView.class, VaadinIcon.LIGHTBULB.create()),
+new SideNavItem("Дэшборд", DashboardView.class, VaadinIcon.DASHBOARD.create())
+);
+var drawerContent = new com.vaadin.flow.component.orderedlayout.VerticalLayout(sideNav);
+drawerContent.addClassNames(
+LumoUtility.Padding.MEDIUM,
+LumoUtility.Gap.MEDIUM,
+"flex", "flex-col", "h-full"
+);
+addToDrawer(drawerContent);
+}
+}
+
+// --- File: ui\MainView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "", layout = MainLayout.class)  // ← ВАЖНО!
+public class MainView extends VerticalLayout {
+public MainView() {
+addClassName("main-content");
+setPadding(true);
+setSpacing(true);
+add(new H2("Добро пожаловать в систему спортивной медицины"));
+add(new Paragraph("Выберите раздел в боковом меню слева"));
+}
+}
+
+// --- File: ui\MedicalExaminationsView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "medical-examinations", layout = MainLayout.class)
+public class MedicalExaminationsView extends VerticalLayout {
+private final MedicalExaminationService medicalExaminationService;
+private final AthleteService athleteService;
+private final DoctorService doctorService;
+private final ExaminationTypeService examinationTypeService;
+private final Grid<MedicalExamination> grid = new Grid<>(MedicalExamination.class);
+@Autowired
+public MedicalExaminationsView(MedicalExaminationService medicalExaminationService,
+AthleteService athleteService,
+DoctorService doctorService,
+ExaminationTypeService examinationTypeService) {
+this.medicalExaminationService = medicalExaminationService;
+this.athleteService = athleteService;
+this.doctorService = doctorService;
+this.examinationTypeService = examinationTypeService;
+addClassName("medicalexaminations-view");
+setSizeFull();
+// Add header and description
+VerticalLayout headerSection = new VerticalLayout();
+headerSection.addClassName("header-section");
+headerSection.add(new com.vaadin.flow.component.html.H1("Управление медицинскими осмотрами"));
+headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять медицинскими осмотрами спортсменов, включая даты, результаты и заключения врачей."));
+configureGrid();
+add(headerSection, getToolbar(), grid);
+updateList();
+}
+private void configureGrid() {
+grid.addClassName("medicalexaminations-grid");
+grid.setSizeFull();
+grid.setColumns("id", "athlete.id", "doctor.doctorId", "examinationType.typeId", "date", "conclusion");
+grid.getColumnByKey("id").setHeader("ID");
+grid.getColumnByKey("athlete.id").setHeader("ID Атлета");
+grid.getColumnByKey("doctor.doctorId").setHeader("ID Доктора");
+grid.getColumnByKey("examinationType.typeId").setHeader("ID Типа Обследования");
+grid.getColumnByKey("date").setHeader("Дата");
+grid.getColumnByKey("conclusion").setHeader("Заключение");
+}
+private VerticalLayout getToolbar() {
+TextField searchField = new TextField();
+searchField.setPlaceholder("Поиск по id");
+searchField.addValueChangeListener(event -> {
+String query = event.getValue();
+if (query.isEmpty()) {
+updateList();
+} else {
+try {
+Long id = Long.parseLong(query);
+grid.setItems(medicalExaminationService.findById(id));
+} catch (NumberFormatException e) {
+Notification.show("Введите корректный id");
+}
+}
+});
+Button addMedicalExaminationButton = new Button("Добавить осмотр", click -> {
+AddMedicalExaminationDialog dialog = new AddMedicalExaminationDialog(
+medicalExaminationService,
+athleteService,
+doctorService,
+examinationTypeService,
+null,
+this::updateList
+);
+dialog.open();
+});
+Button editMedicalExaminationButton = new Button("Изменить осмотр", click -> {
+MedicalExamination selectedMedicalExamination = grid.asSingleSelect().getValue();
+if (selectedMedicalExamination != null) {
+AddMedicalExaminationDialog dialog = new AddMedicalExaminationDialog(
+medicalExaminationService,
+athleteService,
+doctorService,
+examinationTypeService,
+selectedMedicalExamination,
+this::updateList
+);
+dialog.open();
+} else {
+Notification.show("Выберите осмотр для изменения");
+}
+});
+Button deleteMedicalExaminationButton = new Button("Удалить осмотр", click -> {
+MedicalExamination selectedMedicalExamination = grid.asSingleSelect().getValue();
+if (selectedMedicalExamination != null) {
+deleteMedicalExamination(selectedMedicalExamination);
+} else {
+Notification.show("Выберите осмотр для удаления");
+}
+});
+return new VerticalLayout(searchField, addMedicalExaminationButton, editMedicalExaminationButton, deleteMedicalExaminationButton);
+}
+private void updateList() {
+grid.setItems(medicalExaminationService.findAll());
+}
+private void deleteMedicalExamination(MedicalExamination medicalExamination) {
+String displayName = "осмотр с id " + medicalExamination.getId();
+var dependencies = medicalExaminationService.getMedicalExaminationDependencies(medicalExamination.getId());
+CascadeDeleteDialog dialog = new CascadeDeleteDialog("осмотра", displayName, dependencies, () -> {
+try {
+medicalExaminationService.cascadeDeleteMedicalExamination(medicalExamination.getId());
+updateList();
+Notification.show("Осмотр и связанные данные удалены");
+} catch (Exception e) {
+Notification.show("Ошибка при удалении: " + e.getMessage());
+}
+});
+dialog.open();
+}
+}
+
+// --- File: ui\PhysioIndicatorsView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "physio-indicators", layout = MainLayout.class)
+public class PhysioIndicatorsView extends VerticalLayout {
+private final PhysioIndicatorService physioIndicatorService;
+private final MedicalExaminationService medicalExaminationService;
+private final Grid<PhysioIndicator> grid = new Grid<>(PhysioIndicator.class);
+@Autowired
+public PhysioIndicatorsView(PhysioIndicatorService physioIndicatorService, MedicalExaminationService medicalExaminationService) {
+this.physioIndicatorService = physioIndicatorService;
+this.medicalExaminationService = medicalExaminationService;
+addClassName("physio-indicators-view");
+setSizeFull();
+// Add header and description
+VerticalLayout headerSection = new VerticalLayout();
+headerSection.addClassName("header-section");
+headerSection.add(new com.vaadin.flow.component.html.H1("Управление физиотерапевтическими показателями"));
+headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять физиотерапевтическими показателями спортсменов, включая измеренные значения и нормативные диапазоны."));
+configureGrid();
+add(headerSection, getToolbar(), grid);
+updateList();
+}
+private void configureGrid() {
+grid.addClassName("physio-indicators-grid");
+grid.setSizeFull();
+grid.setColumns("indicatorId", "examination.id", "indicatorName", "measuredValue", "unit", "normalMin", "normalMax");
+grid.getColumnByKey("indicatorId").setHeader("ID");
+grid.getColumnByKey("examination.id").setHeader("ID Мед. Осмотра");
+grid.getColumnByKey("indicatorName").setHeader("Название Показателя");
+grid.getColumnByKey("measuredValue").setHeader("Измеренное Значение");
+grid.getColumnByKey("unit").setHeader("Единица Измерения");
+grid.getColumnByKey("normalMin").setHeader("Минимум Нормы");
+grid.getColumnByKey("normalMax").setHeader("Максимум Нормы");
+}
+private VerticalLayout getToolbar() {
+TextField searchField = new TextField();
+searchField.setPlaceholder("Поиск по id");
+searchField.addValueChangeListener(event -> {
+String query = event.getValue();
+if (query.isEmpty()) {
+updateList();
+} else {
+try {
+Long indicatorId = Long.parseLong(query);
+grid.setItems(physioIndicatorService.findByIndicatorId(indicatorId));
+} catch (NumberFormatException e) {
+Notification.show("Введите корректный indicatorId");
+}
+}
+});
+Button addPhysioIndicatorButton = new Button("Добавить физиотерапевтический показатель", click -> {
+AddPhysioIndicatorDialog dialog = new AddPhysioIndicatorDialog(physioIndicatorService, medicalExaminationService, null, this::updateList);
+dialog.open();
+});
+Button editPhysioIndicatorButton = new Button("Изменить физиотерапевтический показатель", click -> {
+PhysioIndicator selectedPhysioIndicator = grid.asSingleSelect().getValue();
+if (selectedPhysioIndicator != null) {
+AddPhysioIndicatorDialog dialog = new AddPhysioIndicatorDialog(physioIndicatorService, medicalExaminationService, selectedPhysioIndicator, this::updateList);
+dialog.open();
+} else {
+Notification.show("Выберите физиотерапевтический показатель для изменения");
+}
+});
+Button deletePhysioIndicatorButton = new Button("Удалить физиотерапевтический показатель", click -> {
+PhysioIndicator selectedPhysioIndicator = grid.asSingleSelect().getValue();
+if (selectedPhysioIndicator != null) {
+deletePhysioIndicator(selectedPhysioIndicator);
+} else {
+Notification.show("Выберите физиотерапевтический показатель для удаления");
+}
+});
+return new VerticalLayout(searchField, addPhysioIndicatorButton, editPhysioIndicatorButton, deletePhysioIndicatorButton);
+}
+private void updateList() {
+grid.setItems(physioIndicatorService.findAll());
+}
+private void deletePhysioIndicator(PhysioIndicator physioIndicator) {
+Dialog confirmDialog = new Dialog();
+confirmDialog.setModal(true);
+confirmDialog.setHeaderTitle("Удаление физиотерапевтического показателя");
+Paragraph message = new Paragraph(
+"Вы уверены, что хотите удалить физиотерапевтический показатель " +
+physioIndicator.getIndicatorName() + "?"
+);
+Button confirmButton = new Button("Удалить", event -> {
+try {
+physioIndicatorService.deleteById(physioIndicator.getIndicatorId());
+updateList();
+Notification.show("Физиотерапевтический показатель удален");
+confirmDialog.close();
+} catch (Exception e) {
+Notification.show("Ошибка при удалении: " + e.getMessage());
+}
+});
+confirmButton.getStyle().set("color", "var(--lumo-error-color)");
+Button cancelButton = new Button("Отмена", event -> confirmDialog.close());
+HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
+buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+VerticalLayout layout = new VerticalLayout(message, buttonsLayout);
+layout.setSpacing(true);
+layout.setPadding(false);
+confirmDialog.add(layout);
+confirmDialog.open();
+}
+}
+
+// --- File: ui\RecommendationsView.java ---
+package chsu.example.sports_medicine.ui;
+@Route(value = "recommendations", layout = MainLayout.class)
+public class RecommendationsView extends VerticalLayout {
+private final RecommendationService recommendationService;
+private final MedicalExaminationService medicalExaminationService;
+private final Grid<Recommendation> grid = new Grid<>(Recommendation.class);
+@Autowired
+public RecommendationsView(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService) {
+this.recommendationService = recommendationService;
+this.medicalExaminationService = medicalExaminationService;
+addClassName("recommendations-view");
+setSizeFull();
+// Add header and description
+VerticalLayout headerSection = new VerticalLayout();
+headerSection.addClassName("header-section");
+headerSection.add(new com.vaadin.flow.component.html.H1("Управление рекомендациями"));
+headerSection.add(new com.vaadin.flow.component.html.Paragraph("Здесь вы можете просматривать, добавлять и управлять медицинскими рекомендациями для спортсменов, включая их приоритеты и статус выполнения."));
+configureGrid();
+add(headerSection, getToolbar(), grid);
+updateList();
+}
+private void configureGrid() {
+grid.addClassName("recommendations-grid");
+grid.setSizeFull();
+grid.setColumns("recommendationId", "examination.id", "recommendationText", "priority", "status");
+grid.getColumnByKey("recommendationId").setHeader("ID");
+grid.getColumnByKey("examination.id").setHeader("ID Мед. Осмотра");
+grid.getColumnByKey("recommendationText").setHeader("Текст Рекомендации");
+grid.getColumnByKey("priority").setHeader("Приоритет");
+grid.getColumnByKey("status").setHeader("Статус");
+}
+private VerticalLayout getToolbar() {
+TextField searchField = new TextField();
+searchField.setPlaceholder("Поиск по id");
+searchField.addValueChangeListener(event -> {
+String query = event.getValue();
+if (query.isEmpty()) {
+updateList();
+} else {
+try {
+Long recommendationId = Long.parseLong(query);
+grid.setItems(recommendationService.findByRecommendationId(recommendationId));
+} catch (NumberFormatException e) {
+Notification.show("Введите корректный recommendationId");
+}
+}
+});
+Button addRecommendationButton = new Button("Добавить рекомендации", click -> {
+AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService, null, this::updateList);
+dialog.open();
+});
+Button editRecommendationButton = new Button("Изменить рекомендацию", click -> {
+Recommendation selectedRecommendation = grid.asSingleSelect().getValue();
+if (selectedRecommendation != null) {
+AddRecommendationDialog dialog = new AddRecommendationDialog(recommendationService, medicalExaminationService, selectedRecommendation, this::updateList);
+dialog.open();
+} else {
+Notification.show("Выберите рекомендацию для изменения");
+}
+});
+Button deleteRecommendationButton = new Button("Удалить рекомендацию", click -> {
+Recommendation selectedRecommendation = grid.asSingleSelect().getValue();
+if (selectedRecommendation != null) {
+deleteRecommendation(selectedRecommendation);
+} else {
+Notification.show("Выберите рекомендацию для удаления");
+}
+});
+return new VerticalLayout(searchField, addRecommendationButton, editRecommendationButton, deleteRecommendationButton);
+}
+private void updateList() {
+grid.setItems(recommendationService.findAll());
+}
+private void deleteRecommendation(Recommendation recommendation) {
+Dialog confirmDialog = new Dialog();
+confirmDialog.setModal(true);
+confirmDialog.setHeaderTitle("Удаление рекомендации");
+Paragraph message = new Paragraph(
+"Вы уверены, что хотите удалить рекомендацию " +
+recommendation.getRecommendationId() + "?"
+);
+Button confirmButton = new Button("Удалить", event -> {
+try {
+recommendationService.deleteById(recommendation.getRecommendationId());
+updateList();
+Notification.show("Рекомендация удален");
+confirmDialog.close();
+} catch (Exception e) {
+Notification.show("Ошибка при удалении: " + e.getMessage());
+}
+});
+confirmButton.getStyle().set("color", "var(--lumo-error-color)");
+Button cancelButton = new Button("Отмена", event -> confirmDialog.close());
+HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
+buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+VerticalLayout layout = new VerticalLayout(message, buttonsLayout);
+layout.setSpacing(true);
+layout.setPadding(false);
+confirmDialog.add(layout);
+confirmDialog.open();
+}
+}
+

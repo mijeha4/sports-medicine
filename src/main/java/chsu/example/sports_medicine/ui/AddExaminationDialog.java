@@ -27,8 +27,8 @@ public class AddExaminationDialog extends Dialog {
         setCloseOnOutsideClick(false);
 
         FormLayout formLayout = new FormLayout();
-        TextField nameField = new TextField("Type Name");
-        TextField descriptionField = new TextField("Description");
+        TextField nameField = new TextField("Название");
+        TextField descriptionField = new TextField("Описание");
 
         formLayout.add(nameField, descriptionField);
 
@@ -39,7 +39,7 @@ public class AddExaminationDialog extends Dialog {
             binder.readBean(examinationType);
         }
 
-        Button saveButton = new Button("Save", event -> {
+        Button saveButton = new Button("Сохранить", event -> {
             if (binder.validate().isOk()) {
                 ExaminationType examinationToSave = examinationType != null ? examinationType : new ExaminationType();
                 binder.writeBeanIfValid(examinationToSave);
@@ -51,7 +51,7 @@ public class AddExaminationDialog extends Dialog {
             }
         });
 
-        Button cancelButton = new Button("Cancel", event -> close());
+        Button cancelButton = new Button("Отмена", event -> close());
 
         VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
         buttonLayout.setSpacing(true);

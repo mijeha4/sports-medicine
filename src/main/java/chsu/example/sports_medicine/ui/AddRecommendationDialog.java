@@ -18,10 +18,10 @@ import chsu.example.sports_medicine.model.MedicalExamination;
 public class AddRecommendationDialog extends Dialog {
 
     FormLayout formLayout = new FormLayout();
-    ComboBox<MedicalExamination> examinationField = new ComboBox<>("Examination");
-    TextField recommendationTextField = new TextField("Recommendation Text");
-    TextField priorityField = new TextField("Priority");
-    TextField statusField = new TextField("Status");
+    ComboBox<MedicalExamination> examinationField = new ComboBox<>("Осмотр");
+    TextField recommendationTextField = new TextField("Текст рекомендации");
+    TextField priorityField = new TextField("Приоритет");
+    TextField statusField = new TextField("Статус");
 
     private final Binder<Recommendation> binder = new Binder<>(Recommendation.class);
 
@@ -53,7 +53,7 @@ public class AddRecommendationDialog extends Dialog {
             binder.readBean(recommendation);
         }
 
-        Button saveButton = new Button("Save", event -> {
+        Button saveButton = new Button("Сохранить", event -> {
             if (binder.validate().isOk()) {
                 Recommendation recommendationToSave = recommendation != null ? recommendation : new Recommendation();
                 binder.writeBeanIfValid(recommendationToSave);
@@ -65,7 +65,7 @@ public class AddRecommendationDialog extends Dialog {
             }
         });
 
-        Button cancelButton = new Button("Cancel", event -> close());
+        Button cancelButton = new Button("Отмена", event -> close());
 
         VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
         buttonLayout.setSpacing(true);
