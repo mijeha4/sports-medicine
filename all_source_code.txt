@@ -1,5 +1,7 @@
-// --- File: SportsMedicineAppApplication.java ---
+Файл SportsMedicineAppApplication.java
 package chsu.example.sports_medicine;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SportsMedicineAppApplication {
 public static void main(String[] args) {
@@ -7,8 +9,16 @@ SpringApplication.run(SportsMedicineAppApplication.class, args);
 }
 }
 
-// --- File: model\Athlete.java ---
+Файл Athlete.java
 package chsu.example.sports_medicine.model;
+import java.time.LocalDate;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
 @Data
 @Entity
 @Table(name = "athletes")
@@ -57,8 +67,15 @@ this.registration_date = registration_date;
 }
 }
 
-// --- File: model\Doctor.java ---
+Файл Doctor.java
 package chsu.example.sports_medicine.model;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
 @Data
 @Entity
 @Table(name = "doctors")
@@ -107,8 +124,15 @@ this.licenseNumber = licenseNumber;
 }
 }
 
-// --- File: model\ExaminationType.java ---
+Файл ExaminationType.java
 package chsu.example.sports_medicine.model;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
 @Data
 @Entity
 @Table(name = "examinationtypes")
@@ -143,8 +167,18 @@ this.description = description;
 }
 }
 
-// --- File: model\MedicalExamination.java ---
+Файл MedicalExamination.java
 package chsu.example.sports_medicine.model;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "medicalexaminations")
@@ -214,8 +248,17 @@ this.conclusion = conclusion;
 }
 }
 
-// --- File: model\PhysioIndicator.java ---
+Файл PhysioIndicator.java
 package chsu.example.sports_medicine.model;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.JoinColumn;
 @Data
 @Entity
 @Table(name = "physioindicators")
@@ -280,8 +323,17 @@ this.normalMax = normalMax;
 }
 }
 
-// --- File: model\Recommendation.java ---
+Файл Recommendation.java
 package chsu.example.sports_medicine.model;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.JoinColumn;
 @Data
 @Entity
 @Table(name = "recommendations")
@@ -332,8 +384,14 @@ this.status = status;
 }
 }
 
-// --- File: repository\AthleteRepository.java ---
+Файл AthleteRepository.java
 package chsu.example.sports_medicine.repository;
+import chsu.example.sports_medicine.model.Athlete;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 @Repository
 public interface AthleteRepository extends JpaRepository<Athlete, Long> {
 @Query("SELECT a FROM Athlete a WHERE " +
@@ -343,8 +401,14 @@ public interface AthleteRepository extends JpaRepository<Athlete, Long> {
 List<Athlete> search(@Param("filter") String filter);
 }
 
-// --- File: repository\DoctorRepository.java ---
+Файл DoctorRepository.java
 package chsu.example.sports_medicine.repository;
+import chsu.example.sports_medicine.model.Doctor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 @Query("SELECT d FROM Doctor d WHERE " +
@@ -354,16 +418,25 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 List<Doctor> search(@Param("filter") String filter);
 }
 
-// --- File: repository\ExaminationTypeRepository.java ---
+Файл ExaminationTypeRepository.java
 package chsu.example.sports_medicine.repository;
+import chsu.example.sports_medicine.model.ExaminationType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 @Repository
 public interface ExaminationTypeRepository extends JpaRepository<ExaminationType, Long> {
 @Query("SELECT et FROM ExaminationType et WHERE et.typeId = :typeId")
 List<ExaminationType> findByTypeId(@Param("typeId") Long typeId);
 }
 
-// --- File: repository\MedicalExaminationRepository.java ---
+Файл MedicalExaminationRepository.java
 package chsu.example.sports_medicine.repository;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 @Repository
 public interface MedicalExaminationRepository extends JpaRepository<MedicalExamination, Long> {
 long countByAthleteId(Long athleteId);
@@ -371,8 +444,14 @@ long countByDoctorId(Long doctorId);
 long countByExaminationTypeId(Long typeId);
 }
 
-// --- File: repository\PhysioIndicatorRepository.java ---
+Файл PhysioIndicatorRepository.java
 package chsu.example.sports_medicine.repository;
+import chsu.example.sports_medicine.model.PhysioIndicator;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 @Repository
 public interface PhysioIndicatorRepository extends JpaRepository<PhysioIndicator, Long> {
 @Query("SELECT pi FROM PhysioIndicator pi WHERE pi.indicatorId = :indicatorId")
@@ -381,8 +460,14 @@ long countByExaminationId(Long examinationId);
 void deleteByExaminationId(Long examinationId);
 }
 
-// --- File: repository\RecommendationRepository.java ---
+Файл RecommendationRepository.java
 package chsu.example.sports_medicine.repository;
+import chsu.example.sports_medicine.model.Recommendation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 @Repository
 public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
 @Query("SELECT r FROM Recommendation r WHERE r.recommendationId = :recommendationId")
@@ -391,8 +476,20 @@ long countByExaminationId(Long examinationId);
 void deleteByExaminationId(Long examinationId);
 }
 
-// --- File: service\AthleteService.java ---
+Файл AthleteService.java
 package chsu.example.sports_medicine.service;
+import chsu.example.sports_medicine.model.Athlete;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import chsu.example.sports_medicine.repository.AthleteRepository;
+import chsu.example.sports_medicine.repository.MedicalExaminationRepository;
+import chsu.example.sports_medicine.repository.PhysioIndicatorRepository;
+import chsu.example.sports_medicine.repository.RecommendationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class AthleteService {
 @Autowired
@@ -458,8 +555,20 @@ physioIndicatorRepository.deleteByExaminationId(examinationId);
 }
 }
 
-// --- File: service\DoctorService.java ---
+Файл DoctorService.java
 package chsu.example.sports_medicine.service;
+import chsu.example.sports_medicine.model.Doctor;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import chsu.example.sports_medicine.repository.DoctorRepository;
+import chsu.example.sports_medicine.repository.MedicalExaminationRepository;
+import chsu.example.sports_medicine.repository.PhysioIndicatorRepository;
+import chsu.example.sports_medicine.repository.RecommendationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class DoctorService {
 private final DoctorRepository doctorRepository;
@@ -524,8 +633,20 @@ doctorRepository.deleteById(doctorId);
 }
 }
 
-// --- File: service\ExaminationTypeService.java ---
+Файл ExaminationTypeService.java
 package chsu.example.sports_medicine.service;
+import chsu.example.sports_medicine.model.ExaminationType;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import chsu.example.sports_medicine.repository.ExaminationTypeRepository;
+import chsu.example.sports_medicine.repository.MedicalExaminationRepository;
+import chsu.example.sports_medicine.repository.PhysioIndicatorRepository;
+import chsu.example.sports_medicine.repository.RecommendationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class ExaminationTypeService {
 private final ExaminationTypeRepository examinationTypeRepository;
@@ -587,8 +708,18 @@ examinationTypeRepository.deleteById(typeId);
 }
 }
 
-// --- File: service\MedicalExaminationService.java ---
+Файл MedicalExaminationService.java
 package chsu.example.sports_medicine.service;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import chsu.example.sports_medicine.repository.MedicalExaminationRepository;
+import chsu.example.sports_medicine.repository.PhysioIndicatorRepository;
+import chsu.example.sports_medicine.repository.RecommendationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class MedicalExaminationService {
 private final MedicalExaminationRepository medicalExaminationRepository;
@@ -630,8 +761,13 @@ medicalExaminationRepository.deleteById(examId);
 }
 }
 
-// --- File: service\PhysioIndicatorService.java ---
+Файл PhysioIndicatorService.java
 package chsu.example.sports_medicine.service;
+import chsu.example.sports_medicine.model.PhysioIndicator;
+import chsu.example.sports_medicine.repository.PhysioIndicatorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
 @Service
 public class PhysioIndicatorService {
 private final PhysioIndicatorRepository physioIndicatorRepository;
@@ -656,8 +792,13 @@ physioIndicatorRepository.deleteById(id);
 }
 }
 
-// --- File: service\RecommendationService.java ---
+Файл RecommendationService.java
 package chsu.example.sports_medicine.service;
+import chsu.example.sports_medicine.model.Recommendation;
+import chsu.example.sports_medicine.repository.RecommendationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
 @Service
 public class RecommendationService {
 private final RecommendationRepository recommendationRepository;
@@ -682,8 +823,19 @@ recommendationRepository.deleteById(id);
 }
 }
 
-// --- File: ui\AddAthleteDialog.java ---
+Файл AddAthleteDialog.java
 package chsu.example.sports_medicine.ui;
+import chsu.example.sports_medicine.model.Athlete;
+import chsu.example.sports_medicine.service.AthleteService;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 @Component
 public class AddAthleteDialog extends Dialog {
 private final Binder<Athlete> binder = new Binder<>(Athlete.class);
@@ -698,12 +850,12 @@ public AddAthleteDialog(AthleteService athleteService, Athlete athlete, Runnable
 setCloseOnEsc(false);
 setCloseOnOutsideClick(false);
 FormLayout formLayout = new FormLayout();
-TextField nameField = new TextField("Name");
-TextField surnameField = new TextField("Surname");
-DatePicker ageField = new DatePicker("Date of Birth");
-TextField sportType = new TextField("Sport type");
-TextField phone = new TextField("Phone");
-DatePicker regField = new DatePicker("Registration Date");
+TextField nameField = new TextField("Имя");
+TextField surnameField = new TextField("Фамилия");
+DatePicker ageField = new DatePicker("Дата рождения");
+TextField sportType = new TextField("Тип спорта");
+TextField phone = new TextField("Телефон");
+DatePicker regField = new DatePicker("Дата регистрации");
 formLayout.add(nameField, surnameField, ageField, sportType, phone, regField);
 binder.forField(nameField).bind(Athlete::getFirstName, Athlete::setFirstName);
 binder.forField(surnameField).bind(Athlete::getLastName, Athlete::setLastName);
@@ -714,7 +866,7 @@ binder.forField(regField).bind(Athlete::getRegistration_date, Athlete::setRegist
 if (athlete != null) {
 binder.readBean(athlete);
 }
-Button saveButton = new Button("Save", event -> {
+Button saveButton = new Button("Сохранить", event -> {
 if (binder.validate().isOk()) {
 Athlete athleteToSave = athlete != null ? athlete : new Athlete();
 binder.writeBeanIfValid(athleteToSave);
@@ -725,15 +877,23 @@ onSaveCallback.run();
 close();
 }
 });
-Button cancelButton = new Button("Cancel", event -> close());
+Button cancelButton = new Button("Отмена", event -> close());
 VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
 buttonLayout.setSpacing(true);
 add(formLayout, buttonLayout);
 }
 }
 
-// --- File: ui\AddDoctorDialog.java ---
+Файл AddDoctorDialog.java
 package chsu.example.sports_medicine.ui;
+import chsu.example.sports_medicine.model.Doctor;
+import chsu.example.sports_medicine.service.DoctorService;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 public class AddDoctorDialog extends Dialog {
 private final Binder<Doctor> binder = new Binder<>(Doctor.class);
 public AddDoctorDialog(DoctorService doctorService) {
@@ -746,10 +906,10 @@ public AddDoctorDialog(DoctorService doctorService, Doctor doctor, Runnable onSa
 setCloseOnEsc(false);
 setCloseOnOutsideClick(false);
 FormLayout formLayout = new FormLayout();
-TextField firstNameField = new TextField("First Name");
-TextField lastNameField = new TextField("Last Name");
-TextField specializationField = new TextField("Specialization");
-TextField licenseNumberField = new TextField("License Number");
+TextField firstNameField = new TextField("Имя");
+TextField lastNameField = new TextField("Фамилия");
+TextField specializationField = new TextField("Специализация");
+TextField licenseNumberField = new TextField("Номер лицензии");
 formLayout.add(firstNameField, lastNameField, specializationField, licenseNumberField);
 binder.forField(firstNameField).bind(Doctor::getFirstName, Doctor::setFirstName);
 binder.forField(lastNameField).bind(Doctor::getLastName, Doctor::setLastName);
@@ -758,7 +918,7 @@ binder.forField(licenseNumberField).bind(Doctor::getLicenseNumber, Doctor::setLi
 if (doctor != null) {
 binder.readBean(doctor);
 }
-Button saveButton = new Button("Save", event -> {
+Button saveButton = new Button("Сохранить", event -> {
 if (binder.validate().isOk()) {
 Doctor doctorToSave = doctor != null ? doctor : new Doctor();
 binder.writeBeanIfValid(doctorToSave);
@@ -769,15 +929,23 @@ onSaveCallback.run();
 close();
 }
 });
-Button cancelButton = new Button("Cancel", event -> close());
+Button cancelButton = new Button("Отмена", event -> close());
 VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
 buttonLayout.setSpacing(true);
 add(formLayout, buttonLayout);
 }
 }
 
-// --- File: ui\AddExaminationDialog.java ---
+Файл AddExaminationDialog.java
 package chsu.example.sports_medicine.ui;
+import chsu.example.sports_medicine.model.ExaminationType;
+import chsu.example.sports_medicine.service.ExaminationTypeService;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 public class AddExaminationDialog extends Dialog {
 private final Binder<ExaminationType> binder = new Binder<>(ExaminationType.class);
 public AddExaminationDialog(ExaminationTypeService examinationTypeService) {
@@ -790,15 +958,15 @@ public AddExaminationDialog(ExaminationTypeService examinationTypeService, Exami
 setCloseOnEsc(false);
 setCloseOnOutsideClick(false);
 FormLayout formLayout = new FormLayout();
-TextField nameField = new TextField("Type Name");
-TextField descriptionField = new TextField("Description");
+TextField nameField = new TextField("Название");
+TextField descriptionField = new TextField("Описание");
 formLayout.add(nameField, descriptionField);
 binder.forField(nameField).bind(ExaminationType::getTypeName, ExaminationType::setTypeName);
 binder.forField(descriptionField).bind(ExaminationType::getDescription, ExaminationType::setDescription);
 if (examinationType != null) {
 binder.readBean(examinationType);
 }
-Button saveButton = new Button("Save", event -> {
+Button saveButton = new Button("Сохранить", event -> {
 if (binder.validate().isOk()) {
 ExaminationType examinationToSave = examinationType != null ? examinationType : new ExaminationType();
 binder.writeBeanIfValid(examinationToSave);
@@ -809,15 +977,32 @@ onSaveCallback.run();
 close();
 }
 });
-Button cancelButton = new Button("Cancel", event -> close());
+Button cancelButton = new Button("Отмена", event -> close());
 VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
 buttonLayout.setSpacing(true);
 add(formLayout, buttonLayout);
 }
 }
 
-// --- File: ui\AddMedicalExaminationDialog.java ---
+Файл AddMedicalExaminationDialog.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import chsu.example.sports_medicine.model.Athlete;
+import chsu.example.sports_medicine.model.Doctor;
+import chsu.example.sports_medicine.model.ExaminationType;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import chsu.example.sports_medicine.service.AthleteService;
+import chsu.example.sports_medicine.service.DoctorService;
+import chsu.example.sports_medicine.service.ExaminationTypeService;
+import chsu.example.sports_medicine.service.MedicalExaminationService;
+import org.springframework.beans.factory.annotation.Autowired;
 public class AddMedicalExaminationDialog extends Dialog {
 private final MedicalExaminationService medicalExaminationService;
 private MedicalExamination medicalExamination;
@@ -893,16 +1078,29 @@ Notification.show("Ошибка при сохранении: " + e.getMessage())
 }
 }
 
-// --- File: ui\AddPhysioIndicatorDialog.java ---
+Файл AddPhysioIndicatorDialog.java
 package chsu.example.sports_medicine.ui;
+import chsu.example.sports_medicine.model.PhysioIndicator;
+import chsu.example.sports_medicine.service.MedicalExaminationService;
+import chsu.example.sports_medicine.service.PhysioIndicatorService;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.component.combobox.ComboBox;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import org.springframework.beans.factory.annotation.Autowired;
 public class AddPhysioIndicatorDialog extends Dialog {
 private final Binder<PhysioIndicator> binder = new Binder<>(PhysioIndicator.class);
-private final ComboBox<MedicalExamination> examinationField = new ComboBox<>("Examination");
-private final TextField indicatorNameField = new TextField("Indicator Name");
-private final NumberField measuredValueField = new NumberField("Measured Value");
-private final TextField unitField = new TextField("Unit");
-private final NumberField normalMinField = new NumberField("Normal Min");
-private final NumberField normalMaxField = new NumberField("Normal Max");
+private final ComboBox<MedicalExamination> examinationField = new ComboBox<>("Осмотр");
+private final TextField indicatorNameField = new TextField("Имя физиотер. показателя");
+private final NumberField measuredValueField = new NumberField("измеренное значение");
+private final TextField unitField = new TextField("Ед. изм.");
+private final NumberField normalMinField = new NumberField("Нормальный минимум");
+private final NumberField normalMaxField = new NumberField("Нормальный максимум");
 @Autowired
 public AddPhysioIndicatorDialog(PhysioIndicatorService physioIndicatorService,
 MedicalExaminationService medicalExaminationService) {
@@ -934,7 +1132,7 @@ binder.forField(normalMaxField).bind(PhysioIndicator::getNormalMax, PhysioIndica
 if (physioIndicator != null) {
 binder.readBean(physioIndicator);
 }
-Button saveButton = new Button("Save", event -> {
+Button saveButton = new Button("Сохранить", event -> {
 if (binder.validate().isOk()) {
 PhysioIndicator indicatorToSave = physioIndicator != null ? physioIndicator : new PhysioIndicator();
 binder.writeBeanIfValid(indicatorToSave);
@@ -945,21 +1143,33 @@ onSaveCallback.run();
 close();
 }
 });
-Button cancelButton = new Button("Cancel", event -> close());
+Button cancelButton = new Button("Отмена", event -> close());
 VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
 buttonLayout.setSpacing(true);
 add(formLayout, buttonLayout);
 }
 }
 
-// --- File: ui\AddRecommendationDialog.java ---
+Файл AddRecommendationDialog.java
 package chsu.example.sports_medicine.ui;
+import chsu.example.sports_medicine.model.Recommendation;
+import chsu.example.sports_medicine.service.MedicalExaminationService;
+import chsu.example.sports_medicine.service.RecommendationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.component.combobox.ComboBox;
+import chsu.example.sports_medicine.model.MedicalExamination;
 public class AddRecommendationDialog extends Dialog {
 FormLayout formLayout = new FormLayout();
-ComboBox<MedicalExamination> examinationField = new ComboBox<>("Examination");
-TextField recommendationTextField = new TextField("Recommendation Text");
-TextField priorityField = new TextField("Priority");
-TextField statusField = new TextField("Status");
+ComboBox<MedicalExamination> examinationField = new ComboBox<>("Осмотр");
+TextField recommendationTextField = new TextField("Текст рекомендации");
+TextField priorityField = new TextField("Приоритет");
+TextField statusField = new TextField("Статус");
 private final Binder<Recommendation> binder = new Binder<>(Recommendation.class);
 @Autowired
 public AddRecommendationDialog(RecommendationService recommendationService, MedicalExaminationService medicalExaminationService) {
@@ -982,7 +1192,7 @@ binder.forField(statusField).bind(Recommendation::getStatus, Recommendation::set
 if (recommendation != null) {
 binder.readBean(recommendation);
 }
-Button saveButton = new Button("Save", event -> {
+Button saveButton = new Button("Сохранить", event -> {
 if (binder.validate().isOk()) {
 Recommendation recommendationToSave = recommendation != null ? recommendation : new Recommendation();
 binder.writeBeanIfValid(recommendationToSave);
@@ -993,15 +1203,24 @@ onSaveCallback.run();
 close();
 }
 });
-Button cancelButton = new Button("Cancel", event -> close());
+Button cancelButton = new Button("Отмена", event -> close());
 VerticalLayout buttonLayout = new VerticalLayout(saveButton, cancelButton);
 buttonLayout.setSpacing(true);
 add(formLayout, buttonLayout);
 }
 }
 
-// --- File: ui\AthletesView.java ---
+Файл AthletesView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
+import chsu.example.sports_medicine.model.Athlete;
+import chsu.example.sports_medicine.service.AthleteService;
+import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "athletes", layout = MainLayout.class)
 public class AthletesView extends VerticalLayout {
 private final AthleteService athleteService;
@@ -1085,8 +1304,18 @@ dialog.open();
 }
 }
 
-// --- File: ui\CascadeDeleteDialog.java ---
+Файл CascadeDeleteDialog.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import java.util.Map;
 public class CascadeDeleteDialog extends Dialog {
 public CascadeDeleteDialog(String entityName, String entityDisplayName, Map<String, Long> dependencies, Runnable confirmAction) {
 setModal(true);
@@ -1136,8 +1365,15 @@ add(layout);
 }
 }
 
-// --- File: ui\ConfirmDialog.java ---
+Файл ConfirmDialog.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 public class ConfirmDialog extends Dialog {
 public ConfirmDialog(String title, String message, 
 String confirmText, String cancelText,
@@ -1162,8 +1398,34 @@ layout.setPadding(true);
 add(layout);
 }
 }
-// --- File: ui\DashboardView.java ---
+Файл DashboardView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.charts.Chart;
+import com.vaadin.flow.component.charts.model.AxisType;
+import com.vaadin.flow.component.charts.model.ChartType;
+import com.vaadin.flow.component.charts.model.Configuration;
+import com.vaadin.flow.component.charts.model.DataSeries;
+import com.vaadin.flow.component.charts.model.DataSeriesItem;
+import com.vaadin.flow.component.charts.model.PlotOptionsPie;
+import com.vaadin.flow.component.charts.model.XAxis;
+import com.vaadin.flow.component.charts.model.PlotOptionsColumn;
+import chsu.example.sports_medicine.model.Athlete;
+import chsu.example.sports_medicine.service.AthleteService;
+import chsu.example.sports_medicine.service.DoctorService;
+import chsu.example.sports_medicine.service.MedicalExaminationService;
+import chsu.example.sports_medicine.service.RecommendationService;
+import chsu.example.sports_medicine.service.PhysioIndicatorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 @Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
 private final AthleteService athleteService;
@@ -1275,8 +1537,17 @@ return chart;
 }
 }
 
-// --- File: ui\DoctorsView.java ---
+Файл DoctorsView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
+import chsu.example.sports_medicine.model.Doctor;
+import chsu.example.sports_medicine.service.DoctorService;
+import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "doctors", layout = MainLayout.class)
 public class DoctorsView extends VerticalLayout {
 private final DoctorService doctorService;
@@ -1358,8 +1629,17 @@ dialog.open();
 }
 }
 
-// --- File: ui\ExaminationsView.java ---
+Файл ExaminationsView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
+import chsu.example.sports_medicine.model.ExaminationType;
+import chsu.example.sports_medicine.service.ExaminationTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "examinations", layout = MainLayout.class)
 public class ExaminationsView extends VerticalLayout {
 private final ExaminationTypeService examinationTypeService;
@@ -1444,8 +1724,16 @@ dialog.open();
 }
 }
 
-// --- File: ui\MainLayout.java ---
+Файл MainLayout.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.sidenav.SideNav;
+import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 @PageTitle("Спортивная медицина")
 public class MainLayout extends AppLayout {
 public MainLayout() {
@@ -1485,8 +1773,12 @@ addToDrawer(drawerContent);
 }
 }
 
-// --- File: ui\MainView.java ---
+Файл MainView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Paragraph;
 @Route(value = "", layout = MainLayout.class)  // ← ВАЖНО!
 public class MainView extends VerticalLayout {
 public MainView() {
@@ -1498,8 +1790,20 @@ add(new Paragraph("Выберите раздел в боковом меню сл
 }
 }
 
-// --- File: ui\MedicalExaminationsView.java ---
+Файл MedicalExaminationsView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
+import chsu.example.sports_medicine.model.MedicalExamination;
+import chsu.example.sports_medicine.service.MedicalExaminationService;
+import chsu.example.sports_medicine.service.AthleteService;
+import chsu.example.sports_medicine.service.DoctorService;
+import chsu.example.sports_medicine.service.ExaminationTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "medical-examinations", layout = MainLayout.class)
 public class MedicalExaminationsView extends VerticalLayout {
 private final MedicalExaminationService medicalExaminationService;
@@ -1610,8 +1914,22 @@ dialog.open();
 }
 }
 
-// --- File: ui\PhysioIndicatorsView.java ---
+Файл PhysioIndicatorsView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
+import chsu.example.sports_medicine.model.PhysioIndicator;
+import chsu.example.sports_medicine.service.MedicalExaminationService;
+import chsu.example.sports_medicine.service.PhysioIndicatorService;
+import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "physio-indicators", layout = MainLayout.class)
 public class PhysioIndicatorsView extends VerticalLayout {
 private final PhysioIndicatorService physioIndicatorService;
@@ -1716,8 +2034,22 @@ confirmDialog.open();
 }
 }
 
-// --- File: ui\RecommendationsView.java ---
+Файл RecommendationsView.java
 package chsu.example.sports_medicine.ui;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
+import chsu.example.sports_medicine.model.Recommendation;
+import chsu.example.sports_medicine.service.MedicalExaminationService;
+import chsu.example.sports_medicine.service.RecommendationService;
+import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "recommendations", layout = MainLayout.class)
 public class RecommendationsView extends VerticalLayout {
 private final RecommendationService recommendationService;
